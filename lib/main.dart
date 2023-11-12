@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:trainlink/route_generator.dart';
 
+import 'styles.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -13,10 +15,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'TrainLink',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
-      initialRoute: "/calendar",
+      initialRoute: "/",
       onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
@@ -40,31 +42,6 @@ class _LoginState extends State<Login> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
-  }
-
-  final ButtonStyle flatButtonStyle = TextButton.styleFrom(
-    foregroundColor: Colors.white,
-    minimumSize: const Size(250, 50),
-    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-    ),
-    backgroundColor: const Color.fromRGBO(86, 94, 109, 1.0),
-  );
-
-  InputDecoration inputFieldStyle(label, hint) {
-    return InputDecoration(
-        labelStyle: const TextStyle(color: Colors.black54),
-        contentPadding: const EdgeInsets.only(left: 25),
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-        ),
-        filled: true,
-        fillColor: Colors.white,
-        labelText: label,
-        floatingLabelBehavior: FloatingLabelBehavior.never,
-        hintText: hint,
-        hintStyle: const TextStyle(color: Colors.black54));
   }
 
   @override
@@ -93,31 +70,38 @@ class _LoginState extends State<Login> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: TextFormField(
-                          style: const TextStyle(color: Colors.black54),
-                          controller: emailController,
-                          decoration:
-                          inputFieldStyle("Email", "Enter your email")),
+                    Row(
+                      children: [
+                        labelStyle("      Email"),
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.all(20),
                       child: TextFormField(
-                          style: const TextStyle(color: Colors.black54),
+                          style: inputStyle(),
+                          controller: emailController,
+                          decoration:
+                          inputFieldDecoration("Enter your email")),
+                    ),
+                    Row(
+                      children: [
+                        labelStyle("      Password"),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: TextFormField(
+                          style: inputStyle(),
                           controller: passwordController,
                           obscureText: true,
-                          decoration: inputFieldStyle(
-                              "Password", "Enter your password")),
+                          decoration: inputFieldDecoration(
+                              "Enter your password")),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 20.0),
                       child: TextButton(
                         onPressed: () {},
-                        child: const Text(
-                          "Forgot Password?",
-                          style: TextStyle(color: Colors.white, fontSize: 15),
-                        ),
+                        child: labelStyle("Forgot Password?", size: 16.0),
                       ),
                     ),
                     ElevatedButton(
@@ -137,11 +121,8 @@ class _LoginState extends State<Login> {
                       });
                     }*/
                       },
-                      child: const Text(
-                        "Sign in",
-                        style: TextStyle(color: Colors.white),
+                      child: labelStyle("Sign In"),
                       ),
-                    )
                   ],
                 ),
               ),
@@ -152,19 +133,11 @@ class _LoginState extends State<Login> {
                   onPressed: () {
                     Navigator.of(context).pushNamed('/register');
                   },
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        "Don't have an account? ",
-                        style: TextStyle(color: Colors.white, fontSize: 15),
-                      ),
-                      Text(
-                        "Sign up",
-                        style: TextStyle(
-                            color: Color.fromRGBO(24, 231, 114, 1.0),
-                            fontSize: 15),
-                      ),
+                      labelStyle("Don't have an account?", size: 16.0),
+                      labelStyle(" Sign up", size: 16.0, green: true),
                     ],
                   )
               ),

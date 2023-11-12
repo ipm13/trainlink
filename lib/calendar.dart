@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'styles.dart';
+
 class Calendar extends StatefulWidget {
   const Calendar({super.key});
 
@@ -200,20 +202,6 @@ class DayCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class CustomLine extends StatelessWidget {
-  const CustomLine({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 0.4 * MediaQuery.of(context).size.width,
-      height: 1,
-      color: Colors.grey,
-      margin: const EdgeInsets.symmetric(vertical: 25),
     );
   }
 }

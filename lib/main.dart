@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trainlink/route_generator.dart';
 
-import 'styles.dart';
+import 'utils.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
-      initialRoute: "/",
+      initialRoute: "/home",
       onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
@@ -49,12 +49,7 @@ class _LoginState extends State<Login> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/background.png"),
-              fit: BoxFit.cover,
-            ),
-          ),
+          decoration: containerDecoration(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

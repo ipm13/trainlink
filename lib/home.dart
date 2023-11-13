@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'styles.dart';
+import 'utils.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -10,6 +10,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final _formKey = GlobalKey<FormState>();
+
+  final codeController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,12 +21,7 @@ class _HomeState extends State<Home> {
         title: const Text('Home'),
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/background.png"),
-            fit: BoxFit.cover,
-          ),
-        ),
+        decoration: containerDecoration(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -31,11 +30,10 @@ class _HomeState extends State<Home> {
               width: 250.0,
               padding: const EdgeInsets.only(top: 20),
               child: Center(
-                child: Transform.scale(
-                  scale: 0.75,
-                  child: Image.asset('assets/images/logo.png'),
-                )
-              ),
+                  child: Transform.scale(
+                scale: 0.75,
+                child: Image.asset('assets/images/logo.png'),
+              )),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 20.0),
@@ -46,7 +44,7 @@ class _HomeState extends State<Home> {
             Expanded(
               child: Center(
                 child: ListView.builder(
-                  itemCount: 8,
+                  itemCount: getUserTeams(),
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 6.0),
@@ -66,19 +64,7 @@ class _HomeState extends State<Home> {
             ElevatedButton(
               style: flatButtonStyle,
               onPressed: () async {
-                /*
-                    if (_formKey.currentState!.validate()) {
-                      String email = emailController.text;
-                      String password = passwordController.text;
-                      await getAccount(email, password).then((value) {
-                        if (!value){
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Your credentials are incorrect")));
-                        }else{
-                          Navigator.of(context).pushReplacementNamed('/profiles');
-                        }
-                      });
-                    }*/
+                Navigator.of(context).pushNamed('/createTeam');
               },
               child: labelStyle("Create Team", size: 16.0),
             ),
@@ -88,19 +74,10 @@ class _HomeState extends State<Home> {
             ElevatedButton(
               style: flatButtonStyle,
               onPressed: () async {
-                /*
-                    if (_formKey.currentState!.validate()) {
-                      String email = emailController.text;
-                      String password = passwordController.text;
-                      await getAccount(email, password).then((value) {
-                        if (!value){
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Your credentials are incorrect")));
-                        }else{
-                          Navigator.of(context).pushReplacementNamed('/profiles');
-                        }
-                      });
-                    }*/
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => joinTeamDialog(context),
+                );
               },
               child: labelStyle("Join Team", size: 16.0),
             ),
@@ -164,6 +141,68 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
+    );
+  }
+
+  int getUserTeams() {
+    return 8;
+  }
+
+  Widget joinTeamDialog(BuildContext context) {
+    return popup(
+      context,
+      widgets: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 20.0),
+          child: labelStyle("Join Team", bold: true),
+        ),
+        Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  labelStyle("     Team Code*"),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      style: inputStyle(),
+                      controller: codeController,
+                      decoration: inputFieldDecoration("Enter the code"),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ElevatedButton(
+                      style: flatButtonStyle,
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          String code = codeController.text;
+                          if (code.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              snackBarStyle("Team code is required")
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              snackBarStyle("Welcome to the team")
+                            );
+                            Navigator.of(context).pop();
+                          }
+                        }
+                      },
+                      child: labelStyle("Confirm", size: 16.0),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ]
     );
   }
 

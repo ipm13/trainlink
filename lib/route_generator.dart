@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trainlink/schedule.dart';
 
 import 'calendar.dart';
 import 'error_route.dart';
@@ -15,6 +16,8 @@ class RouteGenerator
         return MaterialPageRoute(builder: (_) => const Login());
       case '/calendar':
         return MaterialPageRoute(builder: (_) => const Calendar());
+      case '/schedule':
+        return MaterialPageRoute(builder: (_) => const Schedule());
     }
 
     return MaterialPageRoute(builder: (_) => const ErrorRoute());

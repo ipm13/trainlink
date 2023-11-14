@@ -9,7 +9,6 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-
   List<DateTime> getWeeklyOrder() {
     DateTime currentDate = DateTime.now();
 
@@ -31,26 +30,51 @@ class _CalendarState extends State<Calendar> {
       body: Column(
         children: [
           Expanded(
+            flex: 9,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: ListView.builder(
                 itemCount: nextSevenDays.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Column(
-                      children: [
-                        DayCard(
-                            date: nextSevenDays[index],
-                            eventInfo:
-                            "Event details for ${nextSevenDays[index]}"),
-                        if (index < nextSevenDays.length - 1)
-                          const CustomLine(),
-                      ],
-                    ),
+                  return Column(
+                    children: [
+                      DayCard(
+                          date: nextSevenDays[index],
+                          eventInfo:
+                              "Event details for ${nextSevenDays[index]}"),
+                      if (index < nextSevenDays.length - 1) const CustomLine(),
+                    ],
                   );
                 },
               ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                SizedBox(
+                  width: 150,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      // Add functionality for the button
+                    },
+                    icon: const Icon(Icons.remove_red_eye),
+                    label: const Text('Month View'),
+                  ),
+                ),
+                SizedBox(
+                  width: 150,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/schedule');
+                    },
+                    icon: const Icon(Icons.add),
+                    label: const Text('Schedule'),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -75,33 +99,32 @@ class _CalendarState extends State<Calendar> {
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    showPopup('Search Icon Tapped');
+                    showPopup('Training Icon Tapped');
+                  },
+                  child: Container(
+                      padding: const EdgeInsets.all(8),
+                      child: const Icon(Icons.add_card)),
+                ),
+              ),
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    showPopup('Calendar Icon Tapped');
                   },
                   child: Container(
                     padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.search),
+                    child: const Icon(Icons.calendar_month),
                   ),
                 ),
               ),
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    showPopup('Favorite Icon Tapped');
+                    showPopup('Profile Icon Tapped');
                   },
                   child: Container(
                     padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.favorite),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    showPopup('Settings Icon Tapped');
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.settings),
+                    child: const Icon(Icons.account_box),
                   ),
                 ),
               ),
@@ -109,16 +132,6 @@ class _CalendarState extends State<Calendar> {
           ),
         ),
       ),
-      /*
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add functionality for the floating action button
-        },
-        child: const Icon(Icons.add),
-      ),
-
-       */
     );
   }
 
@@ -141,7 +154,6 @@ class _CalendarState extends State<Calendar> {
       },
     );
   }
-
 }
 
 class DayCard extends StatelessWidget {
@@ -213,7 +225,7 @@ class CustomLine extends StatelessWidget {
       width: 0.4 * MediaQuery.of(context).size.width,
       height: 1,
       color: Colors.grey,
-      margin: const EdgeInsets.symmetric(vertical: 25),
+      margin: const EdgeInsets.symmetric(vertical: 35),
     );
   }
 }

@@ -14,7 +14,7 @@ class _TeamState extends State<CreateTeam> {
   final _formKey = GlobalKey<FormState>();
 
   final nameController = TextEditingController();
-  String modality = 'Football';
+  String modality = '--';
 
   @override
   void dispose() {
@@ -79,6 +79,7 @@ class _TeamState extends State<CreateTeam> {
                           },
                           decoration: inputFieldDecoration(""),
                           items: <String>[
+                            '--',
                             'Football',
                             'Basketball',
                             'Handball',
@@ -116,11 +117,17 @@ class _TeamState extends State<CreateTeam> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       snackBarStyle("Team name is required")
                     );
-                  } else {
+                  }
+                  if (modality == '--') {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      snackBarStyle("Sport modality is required")
+                    );
+                  }
+                  if (teamName.isNotEmpty && modality != '--') {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) =>
-                          createTeamDialog(context, teamName),
+                        createTeamDialog(context, teamName),
                     );
                   }
                 }

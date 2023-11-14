@@ -30,10 +30,11 @@ class _HomeState extends State<Home> {
               width: 250.0,
               padding: const EdgeInsets.only(top: 20),
               child: Center(
-                  child: Transform.scale(
-                scale: 0.75,
-                child: Image.asset('assets/images/logo.png'),
-              )),
+                child: Transform.scale(
+                  scale: 0.75,
+                  child: Image.asset('assets/images/logo.png'),
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 20.0),

@@ -36,7 +36,7 @@ ButtonStyle flatButtonStyle = TextButton.styleFrom(
   backgroundColor: const Color.fromRGBO(86, 94, 109, 1.0),
 );
 
-BoxDecoration containerDecoration() {
+BoxDecoration backgroundDecoration() {
   return const BoxDecoration(
     image: DecorationImage(
       image: AssetImage("assets/images/background.png"),
@@ -65,30 +65,34 @@ AlertDialog popup(context, {String route = '', required List<Widget> widgets}) {
     content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Positioned(
-          right: 0.0,
-          child: GestureDetector(
-            onTap: () {
-              if (route.isNotEmpty) {
-                Navigator.of(context).pushNamed(route);
-              } else {
-                Navigator.of(context).pop();
-              }
-            },
-            child: const Align(
-              alignment: Alignment.topRight,
-              child: CircleAvatar(
-                radius: 14.0,
-                backgroundColor: Colors.white,
-                child: Icon(Icons.close, color: Colors.black54),
+        Stack(
+          children: [
+            Positioned(
+              right: 0.0,
+              child: GestureDetector(
+                onTap: () {
+                  if (route.isNotEmpty) {
+                    Navigator.of(context).pushNamed(route);
+                  } else {
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: const Align(
+                  alignment: Alignment.topRight,
+                  child: CircleAvatar(
+                    radius: 14.0,
+                    backgroundColor: Colors.white,
+                    child: Icon(Icons.close, color: Colors.black54),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: widgets,
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: widgets,
+            ),
+          ],
         ),
       ],
     ),

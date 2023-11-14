@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'main.dart';
 import 'utils.dart';
 
 class Home extends StatefulWidget {
@@ -21,7 +22,7 @@ class _HomeState extends State<Home> {
         title: const Text('Home'),
       ),
       body: Container(
-        decoration: containerDecoration(),
+        decoration: backgroundDecoration(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -45,16 +46,13 @@ class _HomeState extends State<Home> {
             Expanded(
               child: Center(
                 child: ListView.builder(
-                  itemCount: getUserTeams(),
+                  itemCount: 1,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6.0),
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const FlutterLogo(size: 40),
-                          labelStyle("Team ${index + 1}", size: 16.0),
-                        ],
+                        children: getTeams(),
                       ),
                     );
                   },
@@ -145,8 +143,55 @@ class _HomeState extends State<Home> {
     );
   }
 
-  int getUserTeams() {
-    return 8;
+  int? getTeamCount() {
+    return Singleton().getTeamCount();
+  }
+
+  List<Widget> getTeams() {
+    List<Widget> widgets = [];
+    if (Singleton().getTeams()!.isEmpty) {
+      widgets.add(
+        labelStyle("You're not part of any team")
+      );
+    } else {
+      Singleton().getTeams()?.forEach((id, team) {
+        String name = team.name;
+        widgets.add(
+          ElevatedButton(
+            style: ButtonStyle(
+              minimumSize: MaterialStateProperty.all(const Size(175, 0)),
+              shape: MaterialStateProperty.all<OutlinedBorder>(
+                const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                ),
+              ),
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  Colors.transparent),
+            ),
+            onPressed: () {
+              Singleton().teamId = id;
+              Navigator.of(context).pushNamed('/team');
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const FlutterLogo(size: 40),
+                const SizedBox(
+                  height: 6,
+                ),
+                labelStyle(name, size: 16.0),
+              ],
+            ),
+          ),
+        );
+        widgets.add(
+          const SizedBox(
+            height: 8,
+          ),
+        );
+      });
+    }
+    return widgets;
   }
 
   Widget joinTeamDialog(BuildContext context) {
@@ -188,6 +233,8 @@ class _HomeState extends State<Home> {
                               snackBarStyle("Team code is required")
                             );
                           } else {
+                            // TODO
+                            // Add a team by code
                             ScaffoldMessenger.of(context).showSnackBar(
                               snackBarStyle("Welcome to the team")
                             );

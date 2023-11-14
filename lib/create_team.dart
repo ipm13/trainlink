@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'main.dart';
 import 'utils.dart';
 
 class CreateTeam extends StatefulWidget {
@@ -30,7 +31,7 @@ class _TeamState extends State<CreateTeam> {
       ),
       resizeToAvoidBottomInset: false,
       body: Container(
-        decoration: containerDecoration(),
+        decoration: backgroundDecoration(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -96,10 +97,9 @@ class _TeamState extends State<CreateTeam> {
                           }).toList(),
                         ),
                         Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(2.0, 15.0, 0.0, 20.0),
+                          padding: const EdgeInsets.fromLTRB(2.0, 15.0, 0.0, 20.0),
                           child: infoStyle(
-                              "By creating a team you will receive a code that can be used to invite other members."
+                            "By creating a team you will receive a code that can be used to invite other members."
                           ),
                         ),
                       ],
@@ -124,6 +124,7 @@ class _TeamState extends State<CreateTeam> {
                     );
                   }
                   if (teamName.isNotEmpty && modality != '--') {
+                    Singleton().addTeam(teamName, modality);
                     showDialog(
                       context: context,
                       builder: (BuildContext context) =>
@@ -223,7 +224,6 @@ class _TeamState extends State<CreateTeam> {
                             Clipboard.setData(
                                 const ClipboardData(text: "7b640ac5-ea97-45d0")
                             ).then((_) {
-                              //Navigator.of(context).pop();
                               Navigator.of(context).pushNamed('/home');
                               ScaffoldMessenger.of(context).showSnackBar(
                                 snackBarStyle("Team code copied to clipboard")

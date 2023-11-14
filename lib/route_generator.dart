@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'calendar.dart';
+import 'login.dart';
 import 'error_route.dart';
 import 'home.dart';
+import 'team.dart';
 import 'create_team.dart';
-import 'main.dart';
+import 'calendar.dart';
 
 class RouteGenerator
 {
@@ -17,6 +18,8 @@ class RouteGenerator
         return MaterialPageRoute(builder: (_) => const Login());
       case '/home':
         return MaterialPageRoute(builder: (_) => const Home());
+      case '/team':
+        return MaterialPageRoute(builder: (_) => const Team());
       case '/createTeam':
         return MaterialPageRoute(builder: (_) => const CreateTeam());
       case '/calendar':

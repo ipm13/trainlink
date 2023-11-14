@@ -10,6 +10,16 @@ Text labelStyle(String label, {double size = 18.0, bool bold = false, bool green
   );
 }
 
+Text buttonLabelStyle(String label, {double size = 16.0}) {
+  return Text(label,
+      style: TextStyle(
+        color: Colors.black54,
+        fontSize: size,
+        fontWeight: FontWeight.bold,
+      )
+  );
+}
+
 Text infoStyle(String info) {
   return Text(info,
     style: const TextStyle(

@@ -33,7 +33,7 @@ class _CalendarState extends State<Calendar> {
         child: Column(
           children: [
             Expanded(
-              flex: 9,
+              flex: 8,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: ListView.builder(
@@ -59,23 +59,29 @@ class _CalendarState extends State<Calendar> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   SizedBox(
-                    width: 150,
+                    width: 180,
                     child: ElevatedButton.icon(
                       onPressed: () {
                         // Add functionality for the button
                       },
-                      icon: const Icon(Icons.remove_red_eye),
-                      label: const Text('Month View'),
+                      icon: const Icon(
+                        Icons.remove_red_eye,
+                        color: Colors.black54,
+                      ),
+                      label: buttonLabelStyle('Monthly View'),
                     ),
                   ),
                   SizedBox(
-                    width: 150,
+                    width: 180,
                     child: ElevatedButton.icon(
                       onPressed: () {
                         Navigator.of(context).pushNamed('/schedule');
                       },
-                      icon: const Icon(Icons.add),
-                      label: const Text('Schedule'),
+                      icon: const Icon(
+                        Icons.add_circle_sharp,
+                        color: Colors.black54,
+                      ),
+                      label: buttonLabelStyle('Schedule'),
                     ),
                   ),
                 ],

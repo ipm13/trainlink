@@ -44,7 +44,9 @@ class _HomeState extends State<Home> {
             labelStyle("My Teams", size: 24.0, bold: true),
             const CustomLine(),
             Expanded(
+              flex: 4,
               child: Center(
+                heightFactor: 200.0,
                 child: ListView.builder(
                   itemCount: 1,
                   itemBuilder: (context, index) {
@@ -60,28 +62,52 @@ class _HomeState extends State<Home> {
               ),
             ),
             const CustomLine(),
-            ElevatedButton(
-              style: flatButtonStyle,
-              onPressed: () async {
-                Navigator.of(context).pushNamed('/createTeam');
-              },
-              child: labelStyle("Create Team", size: 16.0),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-              style: flatButtonStyle,
-              onPressed: () async {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) => joinTeamDialog(context),
-                );
-              },
-              child: labelStyle("Join Team", size: 16.0),
-            ),
-            const SizedBox(
-              height: 20,
+            Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SizedBox(
+                    width: 180,
+                    child: ElevatedButton.icon(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              const Color.fromRGBO(24, 231, 114, 1.0)
+                          )
+                      ),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => joinTeamDialog(context),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.supervised_user_circle_sharp,
+                        color: Colors.black54,
+                      ),
+                      label: buttonLabelStyle("Join Team"),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 180,
+                    child: ElevatedButton.icon(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color.fromRGBO(24, 231, 114, 1.0)
+                        )
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/createTeam');
+                      },
+                      icon: const Icon(
+                        Icons.add_circle_sharp,
+                        color: Colors.black54,
+                      ),
+                      label: buttonLabelStyle("Create Team"),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -94,8 +120,8 @@ class _HomeState extends State<Home> {
             children: [
               Expanded(
                 child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.home),
+                  padding: const EdgeInsets.all(8),
+                  child: const Icon(Icons.home),
                 ),
               ),
               Expanded(
@@ -105,7 +131,8 @@ class _HomeState extends State<Home> {
                   },
                   child: Container(
                       padding: const EdgeInsets.all(8),
-                      child: const Icon(Icons.add_card)),
+                      child: const Icon(Icons.add_card)
+                  ),
                 ),
               ),
               Expanded(
@@ -202,7 +229,7 @@ class _HomeState extends State<Home> {
             children: [
               Row(
                 children: [
-                  labelStyle("     Team Code*"),
+                  labelStyle("     Team Code *"),
                 ],
               ),
               Padding(

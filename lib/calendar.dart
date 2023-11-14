@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import 'utils.dart';
+import 'package:trainlink/utils.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({super.key});
@@ -29,57 +28,61 @@ class _CalendarState extends State<Calendar> {
       appBar: AppBar(
         title: const Text("My Calendar"),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            flex: 9,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: ListView.builder(
-                itemCount: nextSevenDays.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    children: [
-                      DayCard(
-                          date: nextSevenDays[index],
-                          eventInfo:
-                              "Event details for ${nextSevenDays[index]}"),
-                      if (index < nextSevenDays.length - 1) const CustomLine(),
-                    ],
-                  );
-                },
+      body: Container(
+        decoration: backgroundDecoration(),
+        child: Column(
+          children: [
+            Expanded(
+              flex: 9,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: ListView.builder(
+                  itemCount: nextSevenDays.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Column(
+                      children: [
+                        DayCard(
+                            date: nextSevenDays[index],
+                            eventInfo:
+                                "Event details for ${nextSevenDays[index]}"),
+                        if (index < nextSevenDays.length - 1)
+                          const CustomLine(),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                SizedBox(
-                  width: 150,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      // Add functionality for the button
-                    },
-                    icon: const Icon(Icons.remove_red_eye),
-                    label: const Text('Month View'),
+            Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SizedBox(
+                    width: 150,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        // Add functionality for the button
+                      },
+                      icon: const Icon(Icons.remove_red_eye),
+                      label: const Text('Month View'),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: 150,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/schedule');
-                    },
-                    icon: const Icon(Icons.add),
-                    label: const Text('Schedule'),
+                  SizedBox(
+                    width: 150,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/schedule');
+                      },
+                      icon: const Icon(Icons.add),
+                      label: const Text('Schedule'),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: SizedBox(
         height: 60,
@@ -90,18 +93,18 @@ class _CalendarState extends State<Calendar> {
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    showPopup('Home Icon Tapped');
+                    Navigator.pushNamed(context, "/home");
                   },
                   child: Container(
                     padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.home),
+                    child: const Icon(Icons.home_outlined),
                   ),
                 ),
               ),
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    showPopup('Training Icon Tapped');
+                    Navigator.pushNamed(context, "/training");
                   },
                   child: Container(
                       padding: const EdgeInsets.all(8),
@@ -109,20 +112,15 @@ class _CalendarState extends State<Calendar> {
                 ),
               ),
               Expanded(
-                child: InkWell(
-                  onTap: () {
-                    showPopup('Calendar Icon Tapped');
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.calendar_month),
-                  ),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: const Icon(Icons.calendar_month),
                 ),
               ),
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    showPopup('Profile Icon Tapped');
+                    Navigator.pushNamed(context, "/profile");
                   },
                   child: Container(
                     padding: const EdgeInsets.all(8),
@@ -191,7 +189,7 @@ class DayCard extends StatelessWidget {
         children: [
           Text(
             DateFormat('EEEE').format(date.toLocal()),
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           Center(
             child: Container(
@@ -206,7 +204,7 @@ class DayCard extends StatelessWidget {
                 children: [
                   Text(
                     eventInfo,
-                    style: const TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ],
               ),

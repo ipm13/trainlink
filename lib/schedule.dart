@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trainlink/utils.dart';
 
 class Schedule extends StatefulWidget {
   const Schedule({super.key});
@@ -8,8 +9,6 @@ class Schedule extends StatefulWidget {
 }
 
 class _ScheduleState extends State<Schedule> {
-
-  final titleController = TextEditingController();
   final locationController = TextEditingController();
 
   String? selectedTeamValue;
@@ -20,18 +19,11 @@ class _ScheduleState extends State<Schedule> {
 
   @override
   void dispose() {
-    titleController.dispose();
     locationController.dispose();
     super.dispose();
   }
 
   bool validateFields() {
-
-    if (titleController.text.isEmpty){
-      // Show an error message or handle the validation failure
-      return false;
-    }
-
     if (selectedTeamValue == null || selectedTeamValue!.isEmpty) {
       // Show an error message or handle the validation failure
       return false;
@@ -42,7 +34,7 @@ class _ScheduleState extends State<Schedule> {
       return false;
     }
 
-    if (locationController.text.isEmpty){
+    if (locationController.text.isEmpty) {
       // Show an error message or handle the validation failure
       return false;
     }
@@ -67,24 +59,19 @@ class _ScheduleState extends State<Schedule> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Schedule Training'),
-        ),
-        body: Center(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Create training schedule"),
+      ),
+      body: Container(
+        decoration: backgroundDecoration(),
+        child: Center(
           child: Padding(
             padding: const EdgeInsets.all(30.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Input for Title
-                _buildInputWithTitle("Title", titleController),
-
-                // Vertical space
-                const SizedBox(height: 20.0),
-
-                _buildDropdownWithTitle("Team", "Choose a team",
+                _buildDropdownWithTitle("Team *", "Choose a team",
                     ["Team A", "Team B", "Team C"], selectedTeamValue, (value) {
                   selectedTeamValue = value;
                 }),
@@ -94,7 +81,7 @@ class _ScheduleState extends State<Schedule> {
 
                 // Dropdown for My Trainings
                 _buildDropdownWithTitle(
-                    "Trainings",
+                    "Trainings *",
                     "Choose a training",
                     ["Training 1", "Training 2", "Training 3"],
                     selectedTrainingValue, (value) {
@@ -105,14 +92,15 @@ class _ScheduleState extends State<Schedule> {
                 const SizedBox(height: 20.0),
 
                 // Input for Location
-                _buildInputWithTitle("Location", locationController),
+                _buildInputWithTitle(
+                    "Location *", "Enter a location", locationController),
 
                 // Vertical space
                 const SizedBox(height: 20.0),
 
                 // Dropdown for Day Of The Week
                 _buildDropdownWithTitle(
-                    "Week Day",
+                    "Week Day *",
                     "Choose a week day",
                     [
                       "Monday",
@@ -135,7 +123,7 @@ class _ScheduleState extends State<Schedule> {
                   children: [
                     Expanded(
                       child: _buildDropdownWithTitle(
-                          "Day Time",
+                          "Day Time *",
                           "Hour",
                           [
                             "9",
@@ -172,10 +160,6 @@ class _ScheduleState extends State<Schedule> {
                   ],
                 ),
 
-                const SizedBox(height: 10.0),
-                
-                const Text("* All fields are mandatory to fill out"),
-
                 // Vertical space
                 const SizedBox(height: 20.0),
 
@@ -186,12 +170,13 @@ class _ScheduleState extends State<Schedule> {
                       if (validateFields()) {
                         const snackBar = SnackBar(
                           backgroundColor: Colors.green,
-                          content: Text('A training was schedule with success.'),
+                          content:
+                              Text('A training was schedule with success.'),
                           duration: Duration(seconds: 3),
                         );
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         Navigator.pop(context);
-                      }else{
+                      } else {
                         const snackBar = SnackBar(
                           backgroundColor: Colors.red,
                           content: Text('Please fill out the fields!'),
@@ -200,10 +185,7 @@ class _ScheduleState extends State<Schedule> {
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                     },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 32.0, vertical: 16.0),
-                    ),
+                    style: flatButtonStyle,
                     child: const Text(
                       'Confirm',
                       style: TextStyle(fontSize: 18.0),
@@ -215,14 +197,68 @@ class _ScheduleState extends State<Schedule> {
           ),
         ),
       ),
+      bottomNavigationBar: SizedBox(
+        height: 60,
+        child: BottomAppBar(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, "/home");
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: const Icon(Icons.home_outlined),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, "/training");
+                  },
+                  child: Container(
+                      padding: const EdgeInsets.all(8),
+                      child: const Icon(Icons.add_card)),
+                ),
+              ),
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, "/calendar");
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: const Icon(Icons.calendar_month),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, "/profile");
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: const Icon(Icons.account_box),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
-  Widget _buildInputWithTitle(String title, TextEditingController tController) {
+  Widget _buildInputWithTitle(
+      String title, String hintValue, TextEditingController tController) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontSize: 18.0)),
+        labelStyle(title),
         const SizedBox(height: 5.0),
         Container(
           decoration: BoxDecoration(
@@ -231,9 +267,14 @@ class _ScheduleState extends State<Schedule> {
           ),
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: TextField(
+            style: inputStyle(),
             controller: tController,
             decoration: InputDecoration(
-              hintText: "Enter $title",
+              hintStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.normal),
+              hintText: hintValue,
               border: InputBorder.none,
             ),
           ),
@@ -251,7 +292,7 @@ class _ScheduleState extends State<Schedule> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontSize: 18.0)),
+        labelStyle(title),
         const SizedBox(height: 5.0),
         Container(
           decoration: BoxDecoration(
@@ -273,7 +314,7 @@ class _ScheduleState extends State<Schedule> {
               onChanged(selectedValue!);
             },
             value: selectedVariable,
-            hint: Text(hintValue),
+            hint: labelStyle(hintValue),
             isExpanded: true,
             underline: Container(),
           ),

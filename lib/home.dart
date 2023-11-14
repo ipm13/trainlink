@@ -93,46 +93,40 @@ class _HomeState extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Expanded(
-                child: InkWell(
-                  onTap: () {
-                    showPopup('Home Icon Tapped');
-                  },
-                  child: Container(
+                child: Container(
                     padding: const EdgeInsets.all(8),
                     child: const Icon(Icons.home),
+                ),
+              ),
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, "/training");
+                  },
+                  child: Container(
+                      padding: const EdgeInsets.all(8),
+                      child: const Icon(Icons.add_card)),
+                ),
+              ),
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, "/calendar");
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: const Icon(Icons.calendar_month),
                   ),
                 ),
               ),
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    showPopup('Search Icon Tapped');
+                    Navigator.pushNamed(context, "/profile");
                   },
                   child: Container(
                     padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.search),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    showPopup('Favorite Icon Tapped');
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.favorite),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    showPopup('Settings Icon Tapped');
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.settings),
+                    child: const Icon(Icons.account_box),
                   ),
                 ),
               ),

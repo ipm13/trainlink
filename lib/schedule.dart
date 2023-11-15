@@ -62,6 +62,7 @@ class _ScheduleState extends State<Schedule> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create training schedule"),
+        centerTitle: true,
       ),
       body: Container(
         decoration: backgroundDecoration(),

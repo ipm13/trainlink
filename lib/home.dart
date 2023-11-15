@@ -18,14 +18,14 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
       body: Container(
         decoration: backgroundDecoration(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
+            ),
             Container(
               height: 120.0,
               width: 250.0,

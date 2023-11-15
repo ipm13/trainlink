@@ -80,6 +80,7 @@ class _LoginState extends State<Login> {
                     ElevatedButton(
                       style: flatButtonStyle,
                       onPressed: () async {
+                        Navigator.of(context).pushReplacementNamed('/home');
                         /*
                     if (_formKey.currentState!.validate()) {
                       String email = emailController.text;
@@ -104,7 +105,7 @@ class _LoginState extends State<Login> {
               ),
               TextButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/register');
+                    Navigator.of(context).pushNamed('/role');
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

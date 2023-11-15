@@ -17,6 +17,7 @@ class _TeamState extends State<Team> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Team Menu'),
+        centerTitle: true,
       ),
       body: Container(
         decoration: backgroundDecoration(),

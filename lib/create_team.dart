@@ -28,6 +28,7 @@ class _TeamState extends State<CreateTeam> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Team'),
+        centerTitle: true,
       ),
       resizeToAvoidBottomInset: false,
       body: Container(

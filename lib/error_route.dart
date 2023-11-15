@@ -14,6 +14,7 @@ class _ErrorRouteState extends State<ErrorRoute> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Error Page"),
+        centerTitle: true,
       ),
       body: const Center(
         child: Text("Error"),

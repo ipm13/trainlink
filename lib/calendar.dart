@@ -27,6 +27,7 @@ class _CalendarState extends State<Calendar> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("My Calendar"),
+        centerTitle: true,
       ),
       body: Container(
         decoration: backgroundDecoration(),

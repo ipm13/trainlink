@@ -55,9 +55,21 @@ BoxDecoration backgroundDecoration() {
   );
 }
 
-InputDecoration inputFieldDecoration(String hint) {
+InputDecoration inputFieldDecoration(String hint, {IconData? prefixIcon = null, IconData? suffixIcon = null}) {
   return InputDecoration(
     labelStyle: const TextStyle(color: Colors.black54),
+    prefixIcon: prefixIcon != null
+        ? Padding(
+      padding: const EdgeInsets.only(),
+      child: Icon(prefixIcon),
+    )
+        : null,
+    suffixIcon: prefixIcon != null
+        ? Padding(
+      padding: const EdgeInsets.only(),
+      child: Icon(suffixIcon),
+    )
+        : null,
     contentPadding: const EdgeInsets.only(left: 25),
     border: const OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(10.0)),

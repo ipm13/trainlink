@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:intl/intl.dart';
 
 import 'utils.dart';
 
@@ -42,6 +45,7 @@ class _RegisterState extends State<Register> {
             children: [
               Form(
                 key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   children: [
                     Row(
@@ -55,7 +59,7 @@ class _RegisterState extends State<Register> {
                           style: inputStyle(),
                           controller: nameController,
                           decoration:
-                          inputFieldDecoration("Enter your name")),
+                          inputFieldDecoration("Enter your name", prefixIcon: Icons.person)),
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 4),
@@ -71,7 +75,9 @@ class _RegisterState extends State<Register> {
                           style: inputStyle(),
                           controller: emailController,
                           decoration:
-                          inputFieldDecoration("Enter your email")),
+                            inputFieldDecoration("Enter your email", prefixIcon: Icons.email),
+                          validator: (value) => EmailValidator.validate(value!) ? null : "Please enter a valid email",
+                      ),
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 4),
@@ -87,8 +93,9 @@ class _RegisterState extends State<Register> {
                           style: inputStyle(),
                           controller: passwordController,
                           obscureText: true,
-                          decoration: inputFieldDecoration(
-                              "Enter your password")),
+                          decoration: inputFieldDecoration("Enter your password", prefixIcon: Icons.lock, suffixIcon: Icons.visibility_off),
+                          validator: (val) => val!.length < 6 ? 'Password too short.' : null,
+                      ),
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 4),
@@ -104,8 +111,8 @@ class _RegisterState extends State<Register> {
                           style: inputStyle(),
                           controller: confirmPasswordController,
                           obscureText: true,
-                          decoration: inputFieldDecoration(
-                              "Confirm your password")),
+                          decoration: inputFieldDecoration("Confirm your password", prefixIcon: Icons.lock, suffixIcon: Icons.visibility_off),
+                      ),
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 4),
@@ -121,7 +128,20 @@ class _RegisterState extends State<Register> {
                           style: inputStyle(),
                           controller: birthDateController,
                           decoration:
-                          inputFieldDecoration("Enter your birth date")),
+                            inputFieldDecoration("Enter your birth date", prefixIcon: Icons.calendar_month),
+                          readOnly: true,
+                          onTap: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime(2000),
+                                firstDate: DateTime.now().subtract(const Duration(days: 100 * 365)),
+                                lastDate: DateTime.now()
+                            );
+                            if (pickedDate != null) {
+                              birthDateController.text = DateFormat('dd MMMM yyyy').format(pickedDate);
+                            }
+                          },
+                      ),
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 4),
@@ -137,7 +157,7 @@ class _RegisterState extends State<Register> {
                           style: inputStyle(),
                           controller: genderController,
                           decoration:
-                          inputFieldDecoration("Choose your gender")),
+                          inputFieldDecoration("Choose your gender", prefixIcon: Icons.male, suffixIcon: Icons.arrow_drop_down)),
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 4),
@@ -153,7 +173,12 @@ class _RegisterState extends State<Register> {
                           style: inputStyle(),
                           controller: mobilePhoneController,
                           decoration:
-                          inputFieldDecoration("Enter your mobile phone")),
+                            inputFieldDecoration("Enter your mobile phone", prefixIcon: Icons.phone),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                      ),
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 8),

@@ -72,49 +72,63 @@ class _ScheduleState extends State<Schedule> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildDropdownWithTitle("Team *", "Choose a team",
-                    ["Team A", "Team B", "Team C"], selectedTeamValue, (value) {
-                  selectedTeamValue = value;
-                }),
+                const SizedBox(
+                  height: 35,
+                ),
+                buildDropdownWithTitle(
+                  "Team *",
+                Text("Pick your team", style: inputStyle()),
+                  ["Team A", "Team B", "Team C"],
+                  selectedTeamValue,
+                  (String? selectedValue) {
+                    setState(() {
+                      selectedTeamValue = selectedValue;
+                    });
+                  },
+                ),
 
                 // Vertical space
                 const SizedBox(height: 20.0),
 
                 // Dropdown for My Trainings
-                _buildDropdownWithTitle(
-                    "Trainings *",
-                    "Choose a training",
-                    ["Training 1", "Training 2", "Training 3"],
-                    selectedTrainingValue, (value) {
-                  selectedTrainingValue = value;
-                }),
+                buildDropdownWithTitle(
+                  "Trainings *",
+                    Text("Pick your training", style: inputStyle()),
+                  ["Training 1", "Training 2", "Training 3"],
+                  selectedTrainingValue,
+                  (String? selectedValue) {
+                    setState(() {
+                      selectedTrainingValue = selectedValue;
+                    });
+                  },
+                ),
 
                 // Vertical space
                 const SizedBox(height: 20.0),
 
                 // Input for Location
-                _buildInputWithTitle(
-                    "Location *", "Enter a location", locationController),
+                buildInputWithTitle(
+                  "Location *",
+                  inputFieldDecoration("Enter a location"),
+                  locationController,
+                ),
 
                 // Vertical space
                 const SizedBox(height: 20.0),
 
                 // Dropdown for Day Of The Week
-                _buildDropdownWithTitle(
-                    "Week Day *",
-                    "Choose a week day",
-                    [
-                      "Monday",
-                      "Tuesday",
-                      "Wednesday",
-                      "Thursday",
-                      "Friday",
-                      "Saturday",
-                      "Sunday"
-                    ],
-                    selectedDOWValue, (value) {
-                  selectedDOWValue = value;
-                }),
+                buildDropdownWithTitle(
+                  "Week Day *",
+                  Text("Pick a day", style: inputStyle()),
+                  ["Monday", "Tuesday", "Wednesday", "Thursday",
+                    "Friday", "Saturday", "Sunday"],
+                  selectedDOWValue,
+                  (String? selectedValue) {
+                    setState(() {
+                      selectedDOWValue = selectedValue;
+                    });
+                  },
+                ),
 
                 // Vertical space
                 const SizedBox(height: 20.0),
@@ -123,74 +137,61 @@ class _ScheduleState extends State<Schedule> {
                 Row(
                   children: [
                     Expanded(
-                      child: _buildDropdownWithTitle(
-                          "Day Time *",
-                          "Hour",
-                          [
-                            "9",
-                            "10",
-                            "11",
-                            "12",
-                            "13",
-                            "14",
-                            "15",
-                            "16",
-                            "17",
-                            "18",
-                            "19"
-                          ],
-                          selectedTODHValue, (value) {
-                        selectedTODHValue = value;
-                      }),
+                      child: buildDropdownWithTitle(
+                        "Day Time *",
+                        Text("Hour", style: inputStyle()),
+                        ["9", "10", "11", "12", "13", "14",
+                          "15", "16", "17", "18", "19"],
+                        selectedTODHValue,
+                        (String? selectedValue) {
+                          setState(() {
+                            selectedTODHValue = selectedValue;
+                          });
+                        },
+                    ),
                     ),
                     const SizedBox(width: 8.0),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 25.0),
-                      child: Text(
-                        ":",
-                        style: TextStyle(fontSize: 30),
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 25.0),
+                      child: labelStyle(":", size: 26.0),
                     ),
                     const SizedBox(width: 8.0),
                     Expanded(
-                      child: _buildDropdownWithTitle("", "Minutes",
-                          ["00", "15", "30", "45"], selectedTODMValue, (value) {
-                        selectedTODMValue = value;
-                      }),
+                      child: buildDropdownWithTitle(
+                        "",
+                        Text("Minute", style: inputStyle()),
+                        ["00", "15", "30", "45"],
+                        selectedTODMValue,
+                        (String? selectedValue) {
+                          setState(() {
+                            selectedTrainingValue = selectedValue;
+                          });
+                        },
+                      ),
                     ),
                   ],
                 ),
 
                 // Vertical space
-                const SizedBox(height: 20.0),
+                const SizedBox(height: 30.0),
 
                 // Button to confirm
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
                       if (validateFields()) {
-                        const snackBar = SnackBar(
-                          backgroundColor: Colors.green,
-                          content:
-                              Text('A training was schedule with success.'),
-                          duration: Duration(seconds: 3),
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            snackBarStyle("Successfully scheduled a training")
                         );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         Navigator.pop(context);
                       } else {
-                        const snackBar = SnackBar(
-                          backgroundColor: Colors.red,
-                          content: Text('Please fill out the fields!'),
-                          duration: Duration(seconds: 3),
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            snackBarStyle("Please fill out the fields", warning: true)
                         );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                     },
                     style: flatButtonStyle,
-                    child: const Text(
-                      'Confirm',
-                      style: TextStyle(fontSize: 18.0),
-                    ),
+                    child: labelStyle("Confirm", size: 16.0),
                   ),
                 ),
               ],
@@ -251,76 +252,6 @@ class _ScheduleState extends State<Schedule> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildInputWithTitle(
-      String title, String hintValue, TextEditingController tController) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        labelStyle(title),
-        const SizedBox(height: 5.0),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: TextField(
-            style: inputStyle(),
-            controller: tController,
-            decoration: InputDecoration(
-              hintStyle: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.normal),
-              hintText: hintValue,
-              border: InputBorder.none,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDropdownWithTitle(
-      String title,
-      String hintValue,
-      List<String> items,
-      String? selectedVariable,
-      void Function(String?) onChanged) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        labelStyle(title),
-        const SizedBox(height: 5.0),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: DropdownButton<String>(
-            items: items.map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (String? selectedValue) {
-              setState(() {
-                selectedVariable = selectedValue!;
-              });
-              onChanged(selectedValue!);
-            },
-            value: selectedVariable,
-            hint: labelStyle(hintValue),
-            isExpanded: true,
-            underline: Container(),
-          ),
-        ),
-      ],
     );
   }
 }

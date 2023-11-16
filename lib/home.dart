@@ -221,7 +221,7 @@ class _HomeState extends State<Home> {
       widgets: [
         Padding(
           padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 20.0),
-          child: labelStyle("Join Team", bold: true),
+          child: labelStyle("Join Team", bold: true, black: true),
         ),
         Form(
           key: _formKey,
@@ -229,7 +229,7 @@ class _HomeState extends State<Home> {
             children: [
               Row(
                 children: [
-                  labelStyle("     Team Code *"),
+                  labelStyle("     Team Code *", black: true),
                 ],
               ),
               Padding(
@@ -239,7 +239,7 @@ class _HomeState extends State<Home> {
                     TextFormField(
                       style: inputStyle(),
                       controller: codeController,
-                      decoration: inputFieldDecoration("Enter the code"),
+                      decoration: inputFieldDecoration("Enter the code", prefixIcon: Icons.content_paste_go),
                     ),
                     const SizedBox(
                       height: 20,
@@ -251,7 +251,7 @@ class _HomeState extends State<Home> {
                           String code = codeController.text;
                           if (code.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              snackBarStyle("Team code is required")
+                              snackBarStyle("Team code is required", warning: true)
                             );
                           } else {
                             // TODO

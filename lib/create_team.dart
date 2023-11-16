@@ -12,15 +12,23 @@ class CreateTeam extends StatefulWidget {
 }
 
 class _TeamState extends State<CreateTeam> {
-  final _formKey = GlobalKey<FormState>();
-
   final nameController = TextEditingController();
-  String modality = '--';
+  String? selectedModalityValue;
 
   @override
   void dispose() {
     nameController.dispose();
     super.dispose();
+  }
+
+  bool validateFields() {
+    if (nameController.text.isEmpty) {
+      return false;
+    }
+    if (selectedModalityValue == null || selectedModalityValue!.isEmpty) {
+      return false;
+    }
+    return true;
   }
 
   @override
@@ -33,110 +41,69 @@ class _TeamState extends State<CreateTeam> {
       resizeToAvoidBottomInset: false,
       body: Container(
         decoration: backgroundDecoration(),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            labelStyle("Team Logo"),
-            Container(
-              height: 150.0,
-              width: 250.0,
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: const Center(
-                child: FlutterLogo(size: 80),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 90,
               ),
-            ),
-            Form(
-              key: _formKey,
-              child: Column(
+              labelStyle("Team Logo"),
+              Container(
+                height: 150.0,
+                width: 250.0,
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                child: const FlutterLogo(size: 70),
+              ),
+              Column(
                 children: [
-                  Row(
-                    children: [
-                      labelStyle("      Team Name *"),
-                    ],
+                  buildInputWithTitle(
+                    "Team Name *",
+                    inputFieldDecoration("Enter your team name", prefixIcon: Icons.badge_outlined),
+                    nameController,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  buildDropdownWithTitle(
+                    "Sport Modality *",
+                    Text("Pick a modality", style: inputStyle()),
+                    ["Football", "Basketball", "Handball",
+                      "Rugby", "Baseball", "Tennis"],
+                    selectedModalityValue,
+                    (String? selectedValue) {
+                      setState(() {
+                        selectedModalityValue = selectedValue;
+                      });
+                    },
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: TextFormField(
-                      style: inputStyle(),
-                      controller: nameController,
-                      decoration: inputFieldDecoration("Enter your team name")
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      labelStyle("      Sport Modality *"),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        DropdownButtonFormField<String>(
-                          value: modality,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              modality = newValue!;
-                            });
-                          },
-                          decoration: inputFieldDecoration(""),
-                          items: <String>[
-                            '--',
-                            'Football',
-                            'Basketball',
-                            'Handball',
-                            'Rugby',
-                            'Tennis',
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(
-                                value,
-                                style: inputStyle(),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(2.0, 15.0, 0.0, 20.0),
-                          child: infoStyle(
-                            "By creating a team you will receive a code that can be used to invite other members."
-                          ),
-                        ),
-                      ],
+                    padding: const EdgeInsets.all(20.0),
+                    child: infoStyle(
+                      "By creating a team you will receive a code that can be used to invite other members."
                     ),
                   ),
                 ],
               ),
-            ),
-            ElevatedButton(
-              style: flatButtonStyle,
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  String teamName = nameController.text;
-                  if (teamName.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      snackBarStyle("Team name is required")
-                    );
-                  }
-                  if (modality == '--') {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      snackBarStyle("Sport modality is required")
-                    );
-                  }
-                  if (teamName.isNotEmpty && modality != '--') {
-                    Singleton().addTeam(teamName, modality);
+              ElevatedButton(
+                style: flatButtonStyle,
+                onPressed: () async {
+                  if (validateFields()) {
+                    Singleton().addTeam(nameController.text, selectedModalityValue!);
                     showDialog(
-                      context: context,
-                      builder: (BuildContext context) =>
-                        createTeamDialog(context, teamName),
+                        context: context,
+                        builder: (BuildContext context) =>
+                        createTeamDialog(context, nameController.text),
                     );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      snackBarStyle("Team name and modality are required", warning: true));
                   }
-                }
-              },
-              child: labelStyle("Confirm", size: 16.0),
-            )
-          ],
+                },
+                child: labelStyle("Confirm", size: 16.0),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: SizedBox(
@@ -198,7 +165,7 @@ class _TeamState extends State<CreateTeam> {
       widgets: [
         Padding(
           padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 20.0),
-          child: labelStyle("$teamName was created!", bold: true),
+          child: labelStyle("$teamName was created!", bold: true, black: true),
         ),
         Column(
           children: [
@@ -207,7 +174,10 @@ class _TeamState extends State<CreateTeam> {
               child: Column(
                 children: [
                   Container(
-                    color: Colors.black54,
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -234,7 +204,8 @@ class _TeamState extends State<CreateTeam> {
                     height: 15.0,
                   ),
                   infoStyle(
-                    "Copy this code and share it with other members to invite them to the team."
+                    "Copy this code and share it with other members to invite them to the team.",
+                    black: true
                   ),
                 ],
               ),

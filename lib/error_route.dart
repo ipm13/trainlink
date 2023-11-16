@@ -17,7 +17,12 @@ class _ErrorRouteState extends State<ErrorRoute> {
         centerTitle: true,
       ),
       body: const Center(
-        child: Text("Error"),
+        child: Text(
+          "Not yet implemented",
+          style: TextStyle(
+            fontSize: 24,
+          ),
+        ),
       ),
     );
   }

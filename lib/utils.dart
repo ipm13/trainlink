@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-Text labelStyle(String label, {double size = 18.0, bool bold = false, bool green = false}) {
+Text labelStyle(String label, {double size = 18.0, bool bold = false, bool green = false, bool black = false}) {
   return Text(label,
     style: TextStyle(
-      color: green ? const Color.fromRGBO(24, 231, 114, 1.0) : Colors.white,
+      color: green ? const Color.fromRGBO(24, 231, 114, 1.0) : black ? Colors.black54 : Colors.white,
       fontSize: size,
       fontWeight: bold ? FontWeight.bold : FontWeight.normal,
     )
@@ -20,11 +20,11 @@ Text buttonLabelStyle(String label, {double size = 16.0}) {
   );
 }
 
-Text infoStyle(String info) {
+Text infoStyle(String info, {bool black = false}) {
   return Text(info,
-    style: const TextStyle(
-      color: Colors.white,
-      fontSize: 12,
+    style: TextStyle(
+      color: black ? Colors.black54 : Colors.white,
+      fontSize: 14,
     )
   );
 }
@@ -46,6 +46,20 @@ ButtonStyle flatButtonStyle = TextButton.styleFrom(
   backgroundColor: const Color.fromRGBO(86, 94, 109, 1.0),
 );
 
+SnackBar snackBarStyle(String label, {bool warning = false}) {
+  return SnackBar(
+    content: Text(
+      label,
+      style: const TextStyle(
+        color: Colors.black54,
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    backgroundColor: warning ? Colors.redAccent : const Color.fromRGBO(24, 231, 114, 1.0),
+  );
+}
+
 BoxDecoration backgroundDecoration() {
   return const BoxDecoration(
     image: DecorationImage(
@@ -58,18 +72,20 @@ BoxDecoration backgroundDecoration() {
 InputDecoration inputFieldDecoration(String hint, {IconData? prefixIcon = null, IconData? suffixIcon = null}) {
   return InputDecoration(
     labelStyle: const TextStyle(color: Colors.black54),
-    prefixIcon: prefixIcon != null
-        ? Padding(
+    prefixIcon: prefixIcon != null ? Padding(
       padding: const EdgeInsets.only(),
-      child: Icon(prefixIcon),
-    )
-        : null,
-    suffixIcon: prefixIcon != null
-        ? Padding(
+      child: Icon(
+        prefixIcon,
+        color: Colors.black54,
+      ),
+    ) : null,
+    suffixIcon: prefixIcon != null ? Padding(
       padding: const EdgeInsets.only(),
-      child: Icon(suffixIcon),
-    )
-        : null,
+      child: Icon(
+        suffixIcon,
+        color: Colors.black54,
+      ),
+    ) : null,
     contentPadding: const EdgeInsets.only(left: 25),
     border: const OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -78,12 +94,13 @@ InputDecoration inputFieldDecoration(String hint, {IconData? prefixIcon = null, 
     fillColor: Colors.white,
     floatingLabelBehavior: FloatingLabelBehavior.never,
     hintText: hint,
-    hintStyle: const TextStyle(color: Colors.black54));
+    hintStyle: inputStyle()
+  );
 }
 
 AlertDialog popup(context, {String route = '', required List<Widget> widgets}) {
   return AlertDialog(
-    backgroundColor: const Color.fromRGBO(24, 231, 114, 0.85),
+    backgroundColor: const Color.fromRGBO(24, 231, 114, 1.0),
     content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -121,17 +138,69 @@ AlertDialog popup(context, {String route = '', required List<Widget> widgets}) {
   );
 }
 
-SnackBar snackBarStyle(String label) {
-  return SnackBar(
-    content: Text(
-        label,
-        style: const TextStyle(
-          color: Colors.black54,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        )
-    ),
-    backgroundColor: const Color.fromRGBO(24, 231, 114, 1.0),
+Widget buildInputWithTitle(
+    String title,
+    InputDecoration inputDecoration,
+    TextEditingController tController) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      labelStyle("      $title"),
+      const SizedBox(height: 10.0),
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: TextField(
+          style: inputStyle(),
+          controller: tController,
+          decoration: inputDecoration,
+        ),
+      ),
+    ],
+  );
+}
+
+Widget buildDropdownWithTitle(
+    String title,
+    Text hint,
+    List<String> items,
+    String? selectedVariable,
+    void Function(String?) onValueChanged) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      labelStyle("      $title"),
+      const SizedBox(height: 10.0),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: DropdownButton<String>(
+            items: items.map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (String? selectedValue) {
+              onValueChanged(selectedValue);
+            },
+            value: selectedVariable,
+            style: inputStyle(),
+            icon: const Icon(
+                Icons.arrow_drop_down,
+                color: Colors.black54
+            ),
+            hint: hint,
+            isExpanded: true,
+            underline: Container(),
+          ),
+        ),
+      ),
+    ],
   );
 }
 

@@ -48,7 +48,10 @@ class _TeamState extends State<Team> {
               child: Column(
                 children: [
                   Container(
-                    color: Colors.black54,
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

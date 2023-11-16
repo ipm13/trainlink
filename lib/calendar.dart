@@ -34,7 +34,7 @@ class _CalendarState extends State<Calendar> {
         child: Column(
           children: [
             Expanded(
-              flex: 8,
+              flex: 7,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: ListView.builder(
@@ -62,6 +62,11 @@ class _CalendarState extends State<Calendar> {
                   SizedBox(
                     width: 180,
                     child: ElevatedButton.icon(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              const Color.fromRGBO(24, 231, 114, 1.0)
+                          )
+                      ),
                       onPressed: () {
                         // Add functionality for the button
                       },
@@ -75,6 +80,11 @@ class _CalendarState extends State<Calendar> {
                   SizedBox(
                     width: 180,
                     child: ElevatedButton.icon(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              const Color.fromRGBO(24, 231, 114, 1.0)
+                          )
+                      ),
                       onPressed: () {
                         Navigator.of(context).pushNamed('/schedule');
                       },

@@ -1,8 +1,14 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:trainlink/route_generator.dart';
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Future.delayed(const Duration(seconds: 1));
+  FlutterNativeSplash.remove();
+
   runApp(const MyApp());
 }
 

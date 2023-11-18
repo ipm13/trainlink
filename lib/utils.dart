@@ -145,15 +145,11 @@ Widget buildInputWithTitle(
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      labelStyle("      $title"),
-      const SizedBox(height: 10.0),
-      Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: TextField(
-          style: inputStyle(),
-          controller: tController,
-          decoration: inputDecoration,
-        ),
+      labelStyle(" $title"),
+      TextField(
+        style: inputStyle(),
+        controller: tController,
+        decoration: inputDecoration,
       ),
     ],
   );
@@ -168,36 +164,31 @@ Widget buildDropdownWithTitle(
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      labelStyle("      $title"),
-      const SizedBox(height: 10.0),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0),
+      labelStyle(" $title"),
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: DropdownButton<String>(
+          items: items.map((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: (String? selectedValue) {
+            onValueChanged(selectedValue);
+          },
+          value: selectedVariable,
+          style: inputStyle(),
+          icon: const Icon(
+              Icons.arrow_drop_down,
+              color: Colors.black54
           ),
-          child: DropdownButton<String>(
-            items: items.map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (String? selectedValue) {
-              onValueChanged(selectedValue);
-            },
-            value: selectedVariable,
-            style: inputStyle(),
-            icon: const Icon(
-                Icons.arrow_drop_down,
-                color: Colors.black54
-            ),
-            hint: hint,
-            isExpanded: true,
-            underline: Container(),
-          ),
+          hint: hint,
+          isExpanded: true,
         ),
       ),
     ],

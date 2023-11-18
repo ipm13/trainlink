@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trainlink/register2.dart';
 import 'package:trainlink/schedule.dart';
 
 import 'login.dart';
@@ -17,12 +18,14 @@ class RouteGenerator
     final args = settings.arguments;
 
     switch(settings.name){
-      case '/':
+      case '/login':
         return MaterialPageRoute(builder: (_) => const Login());
       case '/role':
         return MaterialPageRoute(builder: (_) => const ChooseRole());
       case '/register':
         return MaterialPageRoute(builder: (_) => const Register());
+      case '/register2':
+        return MaterialPageRoute(builder: (_) => const Register2());
       case '/home':
         return MaterialPageRoute(builder: (_) => const Home());
       case '/team':

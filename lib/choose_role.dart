@@ -38,43 +38,44 @@ class _ChooseRoleState extends State<ChooseRole> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Column(
+                  InkWell(
+                    onTap: () {
+                      print("Coach");
+                      Navigator.of(context).pushNamed('/register');
+                    },
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         labelStyle("Coach", size: 24.0, bold: true),
                         const Padding(
                           padding: EdgeInsets.symmetric(vertical: 20),
                         ),
-                        InkWell(
-                          onTap: () {
-                            print("Coach");
-                            Navigator.of(context).pushNamed('/register');
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20.0),
+                        ClipRRect(
                             child: Image.asset('assets/images/coach.png', width: 180, height: 180),
-                          ),
                         ),
                       ],
+                    ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      labelStyle("Player", size: 24.0, bold: true),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          print("Player");
-                          Navigator.of(context).pushNamed('/register');
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20.0),
-                          child: Image.asset('assets/images/player.png', width: 180, height: 180),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      print("Player");
+                      Navigator.of(context).pushNamed('/register');
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        labelStyle("Player", size: 24.0, bold: true),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20),
                         ),
-                      ),
-                    ],
+                        ClipRRect(
+                            child: Image.asset('assets/images/player.png', width: 180, height: 180),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

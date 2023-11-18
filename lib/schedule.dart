@@ -68,13 +68,11 @@ class _ScheduleState extends State<Schedule> {
         decoration: backgroundDecoration(),
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(30.0),
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(
-                  height: 35,
-                ),
                 buildDropdownWithTitle(
                   "Team *",
                 Text("Pick your team", style: inputStyle()),

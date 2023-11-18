@@ -43,64 +43,65 @@ class _TeamState extends State<CreateTeam> {
         decoration: backgroundDecoration(),
         child: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(
-                height: 90,
-              ),
               labelStyle("Team Logo"),
+              const SizedBox(height: 8),
               Container(
                 height: 150.0,
                 width: 250.0,
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: const FlutterLogo(size: 70),
               ),
-              Column(
-                children: [
-                  buildInputWithTitle(
-                    "Team Name *",
-                    inputFieldDecoration("Enter your team name", prefixIcon: Icons.badge_outlined),
-                    nameController,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  buildDropdownWithTitle(
-                    "Sport Modality *",
-                    Text("Pick a modality", style: inputStyle()),
-                    ["Football", "Basketball", "Handball",
-                      "Rugby", "Baseball", "Tennis"],
-                    selectedModalityValue,
-                    (String? selectedValue) {
-                      setState(() {
-                        selectedModalityValue = selectedValue;
-                      });
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: infoStyle(
-                      "By creating a team you will receive a code that can be used to invite other members."
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                child: Column(
+                  children: [
+                    buildInputWithTitle(
+                      "Team Name *",
+                      inputFieldDecoration("Enter your team name", prefixIcon: Icons.badge_outlined),
+                      nameController,
                     ),
-                  ),
-                ],
-              ),
-              ElevatedButton(
-                style: flatButtonStyle,
-                onPressed: () async {
-                  if (validateFields()) {
-                    Singleton().addTeam(nameController.text, selectedModalityValue!);
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) =>
-                        createTeamDialog(context, nameController.text),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      snackBarStyle("Team name and modality are required", warning: true));
-                  }
-                },
-                child: labelStyle("Confirm", size: 16.0),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    buildDropdownWithTitle(
+                      "Sport Modality *",
+                      Text("Pick a modality", style: inputStyle()),
+                      ["Football", "Basketball", "Handball",
+                        "Rugby", "Baseball", "Tennis"],
+                      selectedModalityValue,
+                      (String? selectedValue) {
+                        setState(() {
+                          selectedModalityValue = selectedValue;
+                        });
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: infoStyle(
+                        "By creating a team you will receive a code that can be used to invite other members."
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: flatButtonStyle,
+                      onPressed: () async {
+                        if (validateFields()) {
+                          Singleton().addTeam(nameController.text, selectedModalityValue!);
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                              createTeamDialog(context, nameController.text),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            snackBarStyle("Team name and modality are required", warning: true));
+                        }
+                      },
+                      child: labelStyle("Confirm", size: 16.0),
+                    ),
+                  ]
+                )
               ),
             ],
           ),

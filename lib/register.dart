@@ -57,6 +57,7 @@ class _RegisterState extends State<Register> {
                   const SizedBox(height: 8),
                   ImageWidget(
                     image: image,
+                    defaultImagePath: 'assets/images/profile.png',
                     onClicked: (source) => pickImage(source),
                   ),
                   Padding(
@@ -153,7 +154,6 @@ class _RegisterState extends State<Register> {
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
     }
-
   }
 
 }

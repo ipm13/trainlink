@@ -104,26 +104,6 @@ class _CalendarState extends State<Calendar> {
       bottomNavigationBar: bottomBar(context, 2)
     );
   }
-
-  void showPopup(String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Tapped Icon"),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        );
-      },
-    );
-  }
 }
 
 class DayCard extends StatelessWidget {
@@ -136,24 +116,7 @@ class DayCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Selected Date"),
-              content: Text(
-                  "Date: ${DateFormat('EEEE, d MMMM yyyy').format(date.toLocal())}"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
+        showPopup(date, eventInfo, context);
       },
       child: Column(
         children: [
@@ -184,5 +147,73 @@ class DayCard extends StatelessWidget {
       ),
     );
   }
+
+  void showPopup(DateTime date, String eventInfo, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          titlePadding: const EdgeInsets.only(top: 5, right: 5),
+          title: Column(
+            children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        // Add functionality for the "X" icon button
+                        Navigator.of(context).pop();
+                      },
+                      alignment: Alignment.centerRight,
+                      icon: const Icon(Icons.close, size: 35),
+                    ),
+                  ],
+                ),
+              const Text("Team Name", textAlign: TextAlign.center),
+                ],
+          ),
+          content: const Text("Train Time", textAlign: TextAlign.center),
+          actions: [
+            Center(
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      // Add functionality for the first button
+                      Navigator.of(context).pop();
+                    },
+                    style: flatButtonStyle,
+                    child: const Text("Reschedule"),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Add functionality for the second button
+                      Navigator.of(context).pop();
+                    },
+                    style: flatButtonStyle,
+                    child: const Text("Check Attendance"),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      // Add functionality for the trash icon button
+                      Navigator.of(context).pop();
+                    },
+                    icon: const Icon(Icons.delete, size: 35),
+                  ),
+                ],
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
 }
 

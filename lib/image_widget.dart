@@ -6,11 +6,13 @@ import 'package:image_picker/image_picker.dart';
 
 class ImageWidget extends StatelessWidget {
   final File? image;
+  final String defaultImagePath;
   final ValueChanged<ImageSource> onClicked;
 
   const ImageWidget({
     Key? key,
     required this.image,
+    required this.defaultImagePath,
     required this.onClicked,
   }) : super(key: key);
 
@@ -47,7 +49,7 @@ class ImageWidget extends StatelessWidget {
 
                   onClicked(source);
                 },
-                child: Image.asset('assets/images/profile.png'),
+                child: Image.asset(defaultImagePath),
             ),
           ),
         ),

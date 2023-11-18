@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
+import 'image_widget.dart';
 import 'main.dart';
 import 'utils.dart';
 
@@ -14,6 +18,7 @@ class CreateTeam extends StatefulWidget {
 class _TeamState extends State<CreateTeam> {
   final nameController = TextEditingController();
   String? selectedModalityValue;
+  File? image;
 
   @override
   void dispose() {
@@ -48,10 +53,10 @@ class _TeamState extends State<CreateTeam> {
             children: [
               labelStyle("Team Logo"),
               const SizedBox(height: 8),
-              Container(
-                height: 150.0,
-                width: 250.0,
-                child: const FlutterLogo(size: 70),
+              ImageWidget(
+                image: image,
+                defaultImagePath: 'assets/images/gallery.png',
+                onClicked: (source) => pickImage(source),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
@@ -187,5 +192,17 @@ class _TeamState extends State<CreateTeam> {
         );
       },
     );
+  }
+
+  Future pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if(image == null) return;
+
+      final imageTemp = File(image.path);
+      setState(() => this.image = imageTemp);
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
   }
 }

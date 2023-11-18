@@ -101,54 +101,7 @@ class _CalendarState extends State<Calendar> {
           ],
         ),
       ),
-      bottomNavigationBar: SizedBox(
-        height: 60,
-        child: BottomAppBar(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/home");
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.home_outlined),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/training");
-                  },
-                  child: Container(
-                      padding: const EdgeInsets.all(8),
-                      child: const Icon(Icons.add_card)),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  child: const Icon(Icons.calendar_month),
-                ),
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/profile");
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.account_box),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: bottomBar(context, 2)
     );
   }
 
@@ -233,16 +186,3 @@ class DayCard extends StatelessWidget {
   }
 }
 
-class CustomLine extends StatelessWidget {
-  const CustomLine({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 0.4 * MediaQuery.of(context).size.width,
-      height: 1,
-      color: Colors.grey,
-      margin: const EdgeInsets.symmetric(vertical: 35),
-    );
-  }
-}

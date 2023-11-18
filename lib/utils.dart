@@ -69,7 +69,7 @@ BoxDecoration backgroundDecoration() {
   );
 }
 
-InputDecoration inputFieldDecoration(String hint, {IconData? prefixIcon = null, IconData? suffixIcon = null}) {
+InputDecoration inputFieldDecoration(String hint, {IconData? prefixIcon, IconData? suffixIcon}) {
   return InputDecoration(
     labelStyle: const TextStyle(color: Colors.black54),
     prefixIcon: prefixIcon != null ? Padding(
@@ -216,4 +216,41 @@ class CustomLine extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 25),
     );
   }
+}
+
+BottomNavigationBar bottomBar(BuildContext context, int currentIndex) {
+  return BottomNavigationBar(
+    currentIndex: currentIndex,
+    onTap: (index) => {
+      if (currentIndex != index) {
+        if(index == 0) Navigator.pushReplacementNamed(context, "/home"),
+        if(index == 1) Navigator.pushReplacementNamed(context, "/training"),
+        if(index == 2) Navigator.pushReplacementNamed(context, "/calendar"),
+        if(index == 3) Navigator.pushReplacementNamed(context, "/profile")
+      }
+    },
+    type: BottomNavigationBarType.fixed,
+    backgroundColor: Colors.white,
+    iconSize: 30,
+    selectedItemColor: Colors.black,
+    unselectedItemColor: Colors.black45,
+    items: const [
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label: "Home",
+      ),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.sports),
+          label: "Training"
+      ),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.calendar_month),
+          label: "Calendar"
+      ),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.account_circle),
+          label: "Profile"
+      ),
+    ],
+  );
 }

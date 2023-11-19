@@ -73,7 +73,7 @@ class _CalendarState extends State<Calendar> {
                       Expanded(
                         flex: 1,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: role.contains("Coach") ? MainAxisAlignment.spaceAround : MainAxisAlignment.center,
                           children: [
                             SizedBox(
                               width: 180,
@@ -93,6 +93,7 @@ class _CalendarState extends State<Calendar> {
                                 label: buttonLabelStyle('Monthly View'),
                               ),
                             ),
+                            if(role.contains("Coach"))
                             SizedBox(
                               width: 180,
                               child: ElevatedButton.icon(

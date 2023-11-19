@@ -155,8 +155,21 @@ class _DayCardState extends State<DayCard> {
   final justificationController = TextEditingController();
 
   List<Schedule> getDaySchedules() {
-    return Singleton().getSchedulesByWeekDay(
-        DateFormat('EEEE').format(widget.date.toLocal()));
+    String weekDay = DateFormat('EEEE').format(widget.date.toLocal());
+    return Singleton().getSchedulesByWeekDay(weekDay);
+  }
+
+  String calculateFinalTime(int hours, int minutes){
+    // Add 60 minutes
+    minutes += 60;
+
+    // Check if adding 60 minutes causes an overflow to the next hour
+    if (minutes >= 60) {
+      hours += minutes ~/ 60; // Add the overflowed hours
+      minutes %= 60; // Set minutes to the remainder after dividing by 60
+    }
+
+    return "$hours:$minutes";
   }
 
   @override
@@ -175,22 +188,54 @@ class _DayCardState extends State<DayCard> {
           },
           child: Center(
             child: Container(
+              color: Colors.white,
               width: 0.8 * MediaQuery.of(context).size.width,
               padding: const EdgeInsets.all(16),
               margin: const EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(10),
-              ),
               child: Column(
                 children: [
                   Text(
                     schedule.teamName,
+                    textAlign: TextAlign.left,
                     style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold
                     ),
                   ),
+                  Row(
+                    children: [
+                      const Icon(Icons.timer_sharp, size: 25),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        "${schedule.hours}:${schedule.minutes} - "
+                            "${calculateFinalTime(schedule.hours, schedule.minutes)}",
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on_outlined, size: 25),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        schedule.location,
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),

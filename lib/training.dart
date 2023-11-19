@@ -78,23 +78,23 @@ class _TrainingState extends State<Training> {
   }
 
   String getTrainingName() {
-    return Singleton().getTraining(Singleton().trainId)!.name;
+    return Singleton().getTraining(Singleton().trainingId)!.name;
   }
 
   String getTrainingModality() {
-    return Singleton().getTraining(Singleton().trainId)!.modality;
+    return Singleton().getTraining(Singleton().trainingId)!.modality;
   }
 
   int getTrainingDuration() {
-    return Singleton().getTraining(Singleton().trainId)!.duration;
+    return Singleton().getTraining(Singleton().trainingId)!.duration;
   }
 
   List<Field> getTrainingFields() {
-    return Singleton().getTraining(Singleton().trainId)!.fields;
+    return Singleton().getTraining(Singleton().trainingId)!.fields;
   }
 
   int getNumFields() {
-    return Singleton().getTraining(Singleton().trainId)!.fields.length;
+    return Singleton().getTraining(Singleton().trainingId)!.fields.length;
   }
 
   List<Widget> getTrainings() {

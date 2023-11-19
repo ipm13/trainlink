@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'image_widget.dart';
 import 'main.dart';
 import 'utils.dart';
 
@@ -103,7 +101,7 @@ class _RepertoireState extends State<Repertoire> {
                   MaterialStateProperty.all<Color>(Colors.transparent),
             ),
             onPressed: () {
-              Singleton().trainId = id;
+              Singleton().trainingId = id;
               Navigator.of(context).pushNamed('/training');
             },
             child: Column(

@@ -40,71 +40,73 @@ class _EditProfileState extends State<EditProfile> {
         title: const Text('Edit Profile'),
         centerTitle: true,
       ),
-      resizeToAvoidBottomInset: false,
       body: Container(
         decoration: backgroundDecoration(),
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-            child: Column(
-              //mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ImageWidget(
-                  image: image,
-                  defaultImagePath: 'assets/images/profile.png',
-                  size: 130,
-                  onClicked: (source) => pickImage(source),
-                ),
-                buildInputWithTitle(
-                  "Name",
-                  inputFieldDecoration("Enter a new name"),
-                  nameController,
-                ),
-                const SizedBox(height: 20.0),
-                buildDropdownWithTitle(
-                  "Gender",
-                  Text("Pick a new gender", style: inputStyle()),
-                  ["Male", "Female", "Other"],
-                  selectedGenderValue,
-                      (String? selectedValue) {
-                    setState(() {
-                      selectedGenderValue = selectedValue;
-                    });
-                  },
-                ),
-                const SizedBox(height: 20.0),
-                buildInputWithTitle(
-                  "Birthday",
-                  inputFieldDecoration("Enter a new birth date"),
-                  birthDateController,
-                ),
-                const SizedBox(height: 20.0),
-                buildInputWithTitle(
-                  "Mobile Phone",
-                  inputFieldDecoration("Enter a new phone number"),
-                  mobilePhoneController,
-                ),
-                const SizedBox(height: 80.0),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (validateFields()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            snackBarStyle("Successfully edited your profile")
-                        );
-                        Navigator.pop(context);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            snackBarStyle("No changes detected", warning: true)
-                        );
-                      }
-                    },
-                    style: flatButtonStyle,
-                    child: labelStyle("Confirm", size: 16.0),
+            padding:
+                const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+            child: SingleChildScrollView(
+              child: Column(
+                //mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ImageWidget(
+                    image: image,
+                    defaultImagePath: 'assets/images/profile.png',
+                    size: 130,
+                    onClicked: (source) => pickImage(source),
                   ),
-                ),
-              ],
+                  buildInputWithTitle(
+                    "Name",
+                    inputFieldDecoration("Enter a new name"),
+                    nameController,
+                  ),
+                  const SizedBox(height: 20.0),
+                  buildDropdownWithTitle(
+                    "Gender",
+                    Text("Pick a new gender", style: inputStyle()),
+                    ["Male", "Female", "Other"],
+                    selectedGenderValue,
+                    (String? selectedValue) {
+                      setState(() {
+                        selectedGenderValue = selectedValue;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20.0),
+                  buildInputWithTitle(
+                    "Birthday",
+                    inputFieldDecoration("Enter a new birth date"),
+                    birthDateController,
+                  ),
+                  const SizedBox(height: 20.0),
+                  buildInputWithTitle(
+                    "Mobile Phone",
+                    inputFieldDecoration("Enter a new phone number"),
+                    mobilePhoneController,
+                  ),
+                  const SizedBox(height: 80.0),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (validateFields()) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              snackBarStyle(
+                                  "Successfully edited your profile"));
+                          Navigator.pop(context);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              snackBarStyle("No changes detected",
+                                  warning: true));
+                        }
+                      },
+                      style: flatButtonStyle,
+                      child: labelStyle("Confirm", size: 16.0),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -116,7 +118,7 @@ class _EditProfileState extends State<EditProfile> {
   Future pickImage(ImageSource source) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
-      if(image == null) return;
+      if (image == null) return;
 
       final imageTemp = File(image.path);
       setState(() => this.image = imageTemp);

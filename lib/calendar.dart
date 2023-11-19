@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trainlink/utils.dart';
 
+import 'main.dart';
+
 class Calendar extends StatefulWidget {
   const Calendar({super.key});
 
@@ -23,7 +25,7 @@ class _CalendarState extends State<Calendar> {
 
   Future<String> getRole() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('role', "Player");
+    prefs.setString('role', "Coach");
     String? storedRole = prefs.getString("role");
     return storedRole ?? "";
   }
@@ -31,7 +33,6 @@ class _CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
     List<DateTime> nextSevenDays = getWeeklyOrder();
-
     return Scaffold(
         body: Container(
           decoration: backgroundDecoration(),
@@ -57,10 +58,16 @@ class _CalendarState extends State<Calendar> {
                             itemBuilder: (BuildContext context, int index) {
                               return Column(
                                 children: [
+                                  Text(
+                                    DateFormat('EEEE')
+                                        .format(nextSevenDays[index].toLocal()),
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
                                   DayCard(
                                     date: nextSevenDays[index],
-                                    eventInfo:
-                                        "Event details for ${nextSevenDays[index]}",
                                     role: role,
                                   ),
                                   if (index < nextSevenDays.length - 1)
@@ -87,7 +94,8 @@ class _CalendarState extends State<Calendar> {
                                             const Color.fromRGBO(
                                                 24, 231, 114, 1.0))),
                                 onPressed: () {
-                                  // Add functionality for the button
+                                  Navigator.of(context)
+                                      .pushNamed("/monthlyView");
                                 },
                                 icon: const Icon(
                                   Icons.remove_red_eye,
@@ -135,14 +143,9 @@ class _CalendarState extends State<Calendar> {
 
 class DayCard extends StatefulWidget {
   final DateTime date;
-  final String eventInfo;
   final String role;
 
-  const DayCard(
-      {super.key,
-      required this.date,
-      required this.eventInfo,
-      required this.role});
+  const DayCard({super.key, required this.date, required this.role});
 
   @override
   State<DayCard> createState() => _DayCardState();
@@ -151,20 +154,26 @@ class DayCard extends StatefulWidget {
 class _DayCardState extends State<DayCard> {
   final justificationController = TextEditingController();
 
+  List<Schedule> getDaySchedules() {
+    return Singleton().getSchedulesByWeekDay(
+        DateFormat('EEEE').format(widget.date.toLocal()));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        showPopup(widget.date, widget.eventInfo, context);
-      },
-      child: Column(
-        children: [
-          Text(
-            DateFormat('EEEE').format(widget.date.toLocal()),
-            style: const TextStyle(
-                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
-          ),
-          Center(
+    List<Schedule> schedules = getDaySchedules();
+    return Column(
+      children: schedules.map((schedule) {
+        return GestureDetector(
+          onTap: () {
+            showPopup(
+              schedule.teamName,
+              schedule.hours,
+              schedule.minutes,
+              context,
+            );
+          },
+          child: Center(
             child: Container(
               width: 0.8 * MediaQuery.of(context).size.width,
               padding: const EdgeInsets.all(16),
@@ -176,19 +185,23 @@ class _DayCardState extends State<DayCard> {
               child: Column(
                 children: [
                   Text(
-                    widget.eventInfo,
-                    style: const TextStyle(fontSize: 16, color: Colors.white),
+                    schedule.teamName,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
             ),
           ),
-        ],
-      ),
+        );
+      }).toList(),
     );
   }
 
-  void showPopup(DateTime date, String eventInfo, BuildContext context) {
+  void showPopup(
+      String teamName, int hours, int minutes, BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -208,10 +221,10 @@ class _DayCardState extends State<DayCard> {
                   ),
                 ],
               ),
-              const Text("Team Name", textAlign: TextAlign.center),
+              Text(teamName, textAlign: TextAlign.center),
             ],
           ),
-          content: const Text("Training Time", textAlign: TextAlign.center),
+          content: Text("$hours:$minutes", textAlign: TextAlign.center),
           actions: [
             Center(
               child: Column(
@@ -244,13 +257,13 @@ class _DayCardState extends State<DayCard> {
                   const SizedBox(
                     height: 20,
                   ),
-                  if(widget.role.contains("Coach"))
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed("Not Implemented");
-                    },
-                    icon: const Icon(Icons.delete, size: 35),
-                  ),
+                  if (widget.role.contains("Coach"))
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed("Not Implemented");
+                      },
+                      icon: const Icon(Icons.delete, size: 35),
+                    ),
                 ],
               ),
             )
@@ -270,27 +283,26 @@ class _DayCardState extends State<DayCard> {
             children: [
               const Padding(
                 padding: EdgeInsets.only(top: 10, right: 5),
-                child: Text("Cancel Attendance", style: TextStyle(fontSize: 25), textAlign: TextAlign.center),
+                child: Text("Cancel Attendance",
+                    style: TextStyle(fontSize: 25),
+                    textAlign: TextAlign.center),
               ),
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: buildInputWithTitle(
-                  "Justification *",
-                  inputFieldDecoration("Enter justification"),
-                  justificationController,
-                  black: true
-                ),
+                    "Justification *",
+                    inputFieldDecoration("Enter justification"),
+                    justificationController,
+                    black: true),
               ),
               ElevatedButton(
                 onPressed: () {
-                  if(justificationController.text.isEmpty){
+                  if (justificationController.text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        snackBarStyle("Please write a justification!")
-                    );
-                  }else{
+                        snackBarStyle("Please write a justification!"));
+                  } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        snackBarStyle("Successfully canceled the training.")
-                    );
+                        snackBarStyle("Successfully canceled the training."));
                     Navigator.of(context).pop();
                   }
                 },

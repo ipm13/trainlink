@@ -50,10 +50,8 @@ class Singleton {
   Singleton._internal();
   factory Singleton() => _instance;
 
-  // Login
-  // TODO
+  // Teams
 
-  // Home
   HashMap<int, Team>? teams = HashMap();
   int? teamId;
 
@@ -75,31 +73,60 @@ class Singleton {
     return teams?.length;
   }
 
-  // Calendar
-  // TODO
+  // Calendar / Schedules
 
-  // Training
-  // TODO
+  HashMap<int, Schedule>? schedules = HashMap();
+  int? scheduleId;
 
-  HashMap<int, Training>? trains = HashMap();
-  int? trainId;
+  void addSchedule(String teamName, String trainingName, String location, String weekDay, int hours, int minutes) {
+    schedules ??= HashMap();
+    int id = schedules!.length + 1;
+    schedules![id] = Schedule(teamName, trainingName, location, weekDay, hours, minutes);
+  }
+
+  HashMap<int, Schedule>? getSchedules() {
+    return schedules;
+  }
+
+  Schedule? getSchedule(int? id) {
+    return schedules?[id];
+  }
+
+  List<Schedule> getSchedulesByWeekDay(String weekDay) {
+    List<Schedule> resultSchedules = [];
+    schedules?.forEach((key, value) {
+      if (value.weekDay.contains(weekDay)){
+        resultSchedules.add(value);
+      }
+    });
+    return resultSchedules;
+  }
+
+  int? getSchedulesCount() {
+    return schedules?.length;
+  }
+
+  // Trainings
+
+  HashMap<int, Training>? trainings = HashMap();
+  int? trainingId;
 
   void addTraining(String name, String modality, int duration, List<Field> fields) {
-    trains ??= HashMap();
-    int id = trains!.length + 1;
-    trains![id] = Training(name, modality, duration, fields);
+    trainings ??= HashMap();
+    int id = trainings!.length + 1;
+    trainings![id] = Training(name, modality, duration, fields);
   }
 
   HashMap<int, Training>? getTrainings() {
-    return trains;
+    return trainings;
   }
 
   Training? getTraining(int? id) {
-    return trains?[id];
+    return trainings?[id];
   }
 
   int? getTrainingCount() {
-    return trains?.length;
+    return trainings?.length;
   }
 
 
@@ -116,6 +143,14 @@ class Training {
   final List<Field> fields;
 
   Training(this.name, this.modality, this.duration, this.fields);
+}
+
+class Schedule {
+  final String teamName, trainingName, location, weekDay;
+  final int hours, minutes;
+
+  Schedule(this.teamName, this.trainingName, this.location, this.weekDay, this.hours, this
+  .minutes);
 }
 
 class Field {

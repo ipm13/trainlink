@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'image_widget.dart';
 import 'main.dart';
 import 'utils.dart';
 
@@ -14,6 +16,21 @@ class _HomeState extends State<Home> {
   final _formKey = GlobalKey<FormState>();
 
   final codeController = TextEditingController();
+
+  String? _email;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  void _loadUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _email = prefs.getString('email')!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +56,7 @@ class _HomeState extends State<Home> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 20.0),
-              child: labelStyle("Hello, John Doe"),
+              child: labelStyle("Hello, $_email"),
             ),
             labelStyle("My Teams", size: 24.0, bold: true),
             const CustomLine(),
@@ -132,14 +149,13 @@ class _HomeState extends State<Home> {
         widgets.add(
           ElevatedButton(
             style: ButtonStyle(
-              minimumSize: MaterialStateProperty.all(const Size(175, 0)),
+              fixedSize: MaterialStateProperty.all(const Size(175, 120)),
               shape: MaterialStateProperty.all<OutlinedBorder>(
                 const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 ),
               ),
-              backgroundColor: MaterialStateProperty.all<Color>(
-                  Colors.transparent),
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
             ),
             onPressed: () {
               Singleton().teamId = id;
@@ -148,10 +164,12 @@ class _HomeState extends State<Home> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const FlutterLogo(size: 40),
-                const SizedBox(
-                  height: 6,
+                const ImageWidget(
+                  image: null,
+                  defaultImagePath: 'assets/images/gallery.png',
+                  size: 40,
                 ),
+                const SizedBox(height: 6,),
                 labelStyle(name, size: 16.0),
               ],
             ),

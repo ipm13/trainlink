@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'image_widget.dart';
 import 'main.dart';
 import 'utils.dart';
 
@@ -76,54 +77,7 @@ class _TrainingState extends State<Training> {
           ],
         ),
       ),
-      bottomNavigationBar: SizedBox(
-        height: 60,
-        child: BottomAppBar(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/home");
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.home),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.add_card)),
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/calendar");
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.calendar_month),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/profile");
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.account_box),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: bottomBar(context, 1),
     );
   }
   List<Widget> getTrains() {
@@ -138,7 +92,7 @@ class _TrainingState extends State<Training> {
         widgets.add(
           ElevatedButton(
             style: ButtonStyle(
-              minimumSize: MaterialStateProperty.all(const Size(175, 0)),
+              fixedSize: MaterialStateProperty.all(const Size(175, 50)),
               shape: MaterialStateProperty.all<OutlinedBorder>(
                 const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -154,10 +108,6 @@ class _TrainingState extends State<Training> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const FlutterLogo(size: 40),
-                const SizedBox(
-                  height: 6,
-                ),
                 labelStyle(name, size: 16.0),
               ],
             ),

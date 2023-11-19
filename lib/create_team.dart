@@ -56,10 +56,11 @@ class _TeamState extends State<CreateTeam> {
               ImageWidget(
                 image: image,
                 defaultImagePath: 'assets/images/gallery.png',
+                size: 160,
                 onClicked: (source) => pickImage(source),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
                 child: Column(
                   children: [
                     buildInputWithTitle(
@@ -73,8 +74,7 @@ class _TeamState extends State<CreateTeam> {
                     buildDropdownWithTitle(
                       "Sport Modality *",
                       Text("Pick a modality", style: inputStyle()),
-                      ["Football", "Basketball", "Handball",
-                        "Rugby", "Baseball", "Tennis"],
+                      ["Soccer", "Rugby"],
                       selectedModalityValue,
                       (String? selectedValue) {
                         setState(() {

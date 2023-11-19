@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home.dart';
 import 'utils.dart';
@@ -12,6 +13,14 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+  void _setUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setString('email', emailController.text);
+    });
+  }
+
   final _formKey = GlobalKey<FormState>();
 
   final emailController = TextEditingController();
@@ -31,7 +40,7 @@ class _LoginState extends State<Login> {
       body: Container(
         decoration: backgroundDecoration(),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -60,7 +69,7 @@ class _LoginState extends State<Login> {
                       inputFieldDecoration("Enter your email", prefixIcon: Icons.email),
                       validator: (value) => EmailValidator.validate(value!) ? null : "Please enter a valid email",
                     ),
-                    Padding(padding: EdgeInsets.only(bottom: 20)),
+                    const Padding(padding: EdgeInsets.only(bottom: 20)),
                     Row(
                       children: [
                         labelStyle(" Password"),
@@ -81,6 +90,7 @@ class _LoginState extends State<Login> {
                     ElevatedButton(
                       style: flatButtonStyle,
                       onPressed: () async {
+                        _setUser();
                         Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(builder: (context) => const Home()),
                           (route) => false,

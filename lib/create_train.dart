@@ -76,14 +76,7 @@ class _CreateTrainState extends State<CreateTrain> {
                     child: buildDropdownWithTitle(
                       "Sport Modality *",
                       Text("Pick a modality", style: inputStyle()),
-                      [
-                        "Football",
-                        "Basketball",
-                        "Handball",
-                        "Rugby",
-                        "Baseball",
-                        "Tennis"
-                      ],
+                      ["Soccer", "Rugby",],
                       selectedModalityValue,
                       (String? selectedValue) {
                         setState(() {
@@ -231,55 +224,7 @@ class _CreateTrainState extends State<CreateTrain> {
           ],
         ),
       ),
-      bottomNavigationBar: SizedBox(
-        height: 60,
-        child: BottomAppBar(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/home");
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.home),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  child: const Icon(Icons.add_card),
-                ),
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/calendar");
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.calendar_month),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/profile");
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.account_box),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: bottomBar(context, 1),
     );
   }
 

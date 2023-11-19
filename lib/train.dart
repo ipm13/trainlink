@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trainlink/main.dart';
 
+import 'image_widget.dart';
 import 'utils.dart';
 
 class Train extends StatefulWidget {
@@ -24,24 +25,14 @@ class _TrainState extends State<Train> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              height: 140.0,
-              width: 450.0,
-              padding: const EdgeInsets.only(top: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const FlutterLogo(size: 80),
-                  const SizedBox(
-                    height: 6,
-                  ),
-                  labelStyle(getTrainName()),
-                ],
-              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 30),
+                labelStyle(getTrainName()),
+              ],
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 40,),
             labelStyle("Modality", size: 24.0, bold: true),
             const SizedBox(
               height: 6,
@@ -81,59 +72,7 @@ class _TrainState extends State<Train> {
           ],
         ),
       ),
-      bottomNavigationBar: SizedBox(
-        height: 60,
-        child: BottomAppBar(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/home");
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.home),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/training");
-                  },
-                  child: Container(
-                      padding: const EdgeInsets.all(8),
-                      child: const Icon(Icons.add_card)),
-                ),
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/calendar");
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.calendar_month),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, "/profile");
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: const Icon(Icons.account_box),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: bottomBar(context, 1),
     );
   }
 

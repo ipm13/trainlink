@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trainlink/image_widget.dart';
 
 import 'utils.dart';
@@ -35,6 +36,14 @@ class _RegisterState extends State<Register> {
     super.dispose();
   }
 
+  void _setUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setString('name', nameController.text);
+      prefs.setString('email', emailController.text);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +67,7 @@ class _RegisterState extends State<Register> {
                   ImageWidget(
                     image: image,
                     defaultImagePath: 'assets/images/profile.png',
+                    size: 160,
                     onClicked: (source) => pickImage(source),
                   ),
                   Padding(
@@ -123,6 +133,7 @@ class _RegisterState extends State<Register> {
                                 )
                             ),
                             onPressed: () {
+                              _setUser();
                               Navigator.of(context).pushNamed('/register2');
                             },
                             label: buttonLabelStyle("Next"),

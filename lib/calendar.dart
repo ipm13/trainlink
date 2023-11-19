@@ -33,6 +33,7 @@ class _CalendarState extends State<Calendar> {
         decoration: backgroundDecoration(),
         child: Column(
           children: [
+            const SizedBox(height: 16),
             Expanded(
               flex: 7,
               child: Padding(

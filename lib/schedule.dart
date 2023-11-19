@@ -139,14 +139,14 @@ class _ScheduleState extends State<Schedule> {
                         "Day Time *",
                         Text("Hour", style: inputStyle()),
                         ["9", "10", "11", "12", "13", "14",
-                          "15", "16", "17", "18", "19"],
+                          "15", "16", "17", "18", "19", "20", "21"],
                         selectedTODHValue,
                         (String? selectedValue) {
                           setState(() {
                             selectedTODHValue = selectedValue;
                           });
                         },
-                    ),
+                      ),
                     ),
                     const SizedBox(width: 8.0),
                     Padding(
@@ -162,7 +162,7 @@ class _ScheduleState extends State<Schedule> {
                         selectedTODMValue,
                         (String? selectedValue) {
                           setState(() {
-                            selectedTrainingValue = selectedValue;
+                            selectedTODMValue = selectedValue;
                           });
                         },
                       ),

@@ -7,14 +7,16 @@ import 'package:image_picker/image_picker.dart';
 class ImageWidget extends StatelessWidget {
   final File? image;
   final String defaultImagePath;
-  final ValueChanged<ImageSource> onClicked;
+  final double size;
+  final ValueChanged<ImageSource>? onClicked;
 
   const ImageWidget({
-    Key? key,
+    super.key,
     required this.image,
     required this.defaultImagePath,
-    required this.onClicked,
-  }) : super(key: key);
+    required this.size,
+    this.onClicked,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class ImageWidget extends StatelessWidget {
           Positioned(
             bottom: 0,
             right: 4,
-            child: buildEditIcon(color),
+            child: onClicked != null ? buildEditIcon(color) : Container(),
           ),
         ],
       ),
@@ -40,14 +42,16 @@ class ImageWidget extends StatelessWidget {
         child: Material(
           color: Colors.white,
           child: SizedBox(
-            width: 160,
-            height: 160,
+            width: size,
+            height: size,
             child: InkWell(
                 onTap: () async {
-                  final source = await showImageSource(context);
-                  if (source == null) return;
+                  if (onClicked != null) {
+                    final source = await showImageSource(context);
+                    if (source == null) return;
 
-                  onClicked(source);
+                    onClicked!(source);
+                  }
                 },
                 child: Image.asset(defaultImagePath),
             ),
@@ -71,10 +75,12 @@ class ImageWidget extends StatelessWidget {
           height: 160,
           child: InkWell(
               onTap: () async {
-                final source = await showImageSource(context);
-                if (source == null) return;
+                if (onClicked != null) {
+                  final source = await showImageSource(context);
+                  if (source == null) return;
 
-                onClicked(source);
+                  onClicked!(source);
+                }
               }
           ),
         ),
@@ -117,11 +123,11 @@ class ImageWidget extends StatelessWidget {
             actions: [
               CupertinoActionSheetAction(
                   onPressed: () => Navigator.of(context).pop(ImageSource.camera),
-                  child: Text('Camera')
+                  child: const Text('Camera')
               ),
               CupertinoActionSheetAction(
                   onPressed: () => Navigator.of(context).pop(ImageSource.gallery),
-                  child: Text('Gallery')
+                  child: const Text('Gallery')
               )
             ],
           )
@@ -133,13 +139,13 @@ class ImageWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: Icon(Icons.camera_alt),
-                title: Text('Camera'),
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Camera'),
                 onTap: () => Navigator.of(context).pop(ImageSource.camera),
               ),
               ListTile(
-                leading: Icon(Icons.image),
-                title: Text('Gallery'),
+                leading: const Icon(Icons.image),
+                title: const Text('Gallery'),
                 onTap: () => Navigator.of(context).pop(ImageSource.gallery),
               )
             ],

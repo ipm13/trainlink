@@ -44,7 +44,7 @@ class RouteGenerator
       case '/createTrain':
         return MaterialPageRoute(builder: (_) => const CreateTrain());
       case '/train':
-          return MaterialPageRoute(builder: (_) => const Train());
+        return MaterialPageRoute(builder: (_) => const Train());
     }
 
     return MaterialPageRoute(builder: (_) => const ErrorRoute());

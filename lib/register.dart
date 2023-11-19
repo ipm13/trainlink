@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -51,17 +50,19 @@ class _RegisterState extends State<Register> {
         title: const Text('Sign Up'),
         centerTitle: true,
       ),
-      resizeToAvoidBottomInset: false,
       body: Container(
+        height: double.infinity,
         decoration: backgroundDecoration(),
+        child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Form(
               key: _formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Column(
+                child: Column(
                 children: [
+                  const SizedBox(height: 20),
                   labelStyle("Profile Photo"),
                   const SizedBox(height: 8),
                   ImageWidget(
@@ -159,6 +160,7 @@ class _RegisterState extends State<Register> {
           ],
         ),
       ),
+      ),
     );
   }
 
@@ -170,9 +172,7 @@ class _RegisterState extends State<Register> {
       final imageTemp = File(image.path);
       setState(() => this.image = imageTemp);
     } on PlatformException catch (e) {
-      if (kDebugMode) {
-        print('Failed to pick image: $e');
-      }
+      print('Failed to pick image: $e');
     }
   }
 

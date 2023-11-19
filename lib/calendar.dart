@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trainlink/utils.dart';
 
+import 'main.dart';
+
 class Calendar extends StatefulWidget {
   const Calendar({super.key});
 
@@ -23,6 +25,7 @@ class _CalendarState extends State<Calendar> {
 
   Future<String> getRole() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('role', "Coach");
     String? storedRole = prefs.getString("role");
     return storedRole ?? "";
   }
@@ -30,7 +33,6 @@ class _CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
     List<DateTime> nextSevenDays = getWeeklyOrder();
-
     return Scaffold(
         body: Container(
           decoration: backgroundDecoration(),
@@ -56,10 +58,16 @@ class _CalendarState extends State<Calendar> {
                             itemBuilder: (BuildContext context, int index) {
                               return Column(
                                 children: [
+                                  Text(
+                                    DateFormat('EEEE')
+                                        .format(nextSevenDays[index].toLocal()),
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
                                   DayCard(
                                     date: nextSevenDays[index],
-                                    eventInfo:
-                                        "Event details for ${nextSevenDays[index]}",
                                     role: role,
                                   ),
                                   if (index < nextSevenDays.length - 1)
@@ -73,7 +81,9 @@ class _CalendarState extends State<Calendar> {
                       Expanded(
                         flex: 1,
                         child: Row(
-                          mainAxisAlignment: role.contains("Coach") ? MainAxisAlignment.spaceAround : MainAxisAlignment.center,
+                          mainAxisAlignment: role.contains("Coach")
+                              ? MainAxisAlignment.spaceAround
+                              : MainAxisAlignment.center,
                           children: [
                             SizedBox(
                               width: 180,
@@ -84,7 +94,8 @@ class _CalendarState extends State<Calendar> {
                                             const Color.fromRGBO(
                                                 24, 231, 114, 1.0))),
                                 onPressed: () {
-                                  // Add functionality for the button
+                                  Navigator.of(context)
+                                      .pushNamed("/monthlyView");
                                 },
                                 icon: const Icon(
                                   Icons.remove_red_eye,
@@ -93,25 +104,26 @@ class _CalendarState extends State<Calendar> {
                                 label: buttonLabelStyle('Monthly View'),
                               ),
                             ),
-                            if(role.contains("Coach"))
-                            SizedBox(
-                              width: 180,
-                              child: ElevatedButton.icon(
-                                style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            const Color.fromRGBO(
-                                                24, 231, 114, 1.0))),
-                                onPressed: () {
-                                  Navigator.of(context).pushNamed('/schedule');
-                                },
-                                icon: const Icon(
-                                  Icons.add_circle_sharp,
-                                  color: Colors.black54,
+                            if (role.contains("Coach"))
+                              SizedBox(
+                                width: 180,
+                                child: ElevatedButton.icon(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              const Color.fromRGBO(
+                                                  24, 231, 114, 1.0))),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pushNamed('/schedule');
+                                  },
+                                  icon: const Icon(
+                                    Icons.add_circle_sharp,
+                                    color: Colors.black54,
+                                  ),
+                                  label: buttonLabelStyle('Schedule'),
                                 ),
-                                label: buttonLabelStyle('Schedule'),
                               ),
-                            ),
                           ],
                         ),
                       ),
@@ -129,31 +141,39 @@ class _CalendarState extends State<Calendar> {
   }
 }
 
-class DayCard extends StatelessWidget {
+class DayCard extends StatefulWidget {
   final DateTime date;
-  final String eventInfo;
   final String role;
 
-  const DayCard(
-      {super.key,
-      required this.date,
-      required this.eventInfo,
-      required this.role});
+  const DayCard({super.key, required this.date, required this.role});
+
+  @override
+  State<DayCard> createState() => _DayCardState();
+}
+
+class _DayCardState extends State<DayCard> {
+  final justificationController = TextEditingController();
+
+  List<Schedule> getDaySchedules() {
+    return Singleton().getSchedulesByWeekDay(
+        DateFormat('EEEE').format(widget.date.toLocal()));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        showPopup(date, eventInfo, context);
-      },
-      child: Column(
-        children: [
-          Text(
-            DateFormat('EEEE').format(date.toLocal()),
-            style: const TextStyle(
-                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
-          ),
-          Center(
+    List<Schedule> schedules = getDaySchedules();
+    return Column(
+      children: schedules.map((schedule) {
+        return GestureDetector(
+          onTap: () {
+            showPopup(
+              schedule.teamName,
+              schedule.hours,
+              schedule.minutes,
+              context,
+            );
+          },
+          child: Center(
             child: Container(
               width: 0.8 * MediaQuery.of(context).size.width,
               padding: const EdgeInsets.all(16),
@@ -165,19 +185,23 @@ class DayCard extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    eventInfo,
-                    style: const TextStyle(fontSize: 16, color: Colors.white),
+                    schedule.teamName,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
             ),
           ),
-        ],
-      ),
+        );
+      }).toList(),
     );
   }
 
-  void showPopup(DateTime date, String eventInfo, BuildContext context) {
+  void showPopup(
+      String teamName, int hours, int minutes, BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -190,7 +214,6 @@ class DayCard extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                      // Add functionality for the "X" icon button
                       Navigator.of(context).pop();
                     },
                     alignment: Alignment.centerRight,
@@ -198,10 +221,10 @@ class DayCard extends StatelessWidget {
                   ),
                 ],
               ),
-              const Text("Team Name", textAlign: TextAlign.center),
+              Text(teamName, textAlign: TextAlign.center),
             ],
           ),
-          content: const Text("Training Time", textAlign: TextAlign.center),
+          content: Text("$hours:$minutes", textAlign: TextAlign.center),
           actions: [
             Center(
               child: Column(
@@ -211,7 +234,7 @@ class DayCard extends StatelessWidget {
                       Navigator.of(context).pushNamed("Not Implemented");
                     },
                     style: flatButtonStyle,
-                    child: Text(role.contains("Coach")
+                    child: Text(widget.role.contains("Coach")
                         ? "Reschedule"
                         : "Check Training"),
                   ),
@@ -220,30 +243,77 @@ class DayCard extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      if (role.contains("Coach")) {
+                      if (widget.role.contains("Coach")) {
                         Navigator.of(context).pushNamed("Not Implemented");
                       } else {
-                        // Another Popup
+                        showCancelAttendance(context);
                       }
                     },
                     style: flatButtonStyle,
-                    child: Text(role.contains("Coach")
+                    child: Text(widget.role.contains("Coach")
                         ? "Check Attendance"
                         : "Cancel Attendance"),
                   ),
                   const SizedBox(
                     height: 20,
                   ),
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed("Not Implemented");
-                    },
-                    icon: const Icon(Icons.delete, size: 35),
-                  ),
+                  if (widget.role.contains("Coach"))
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed("Not Implemented");
+                      },
+                      icon: const Icon(Icons.delete, size: 35),
+                    ),
                 ],
               ),
             )
           ],
+        );
+      },
+    );
+  }
+
+  void showCancelAttendance(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(top: 10, right: 5),
+                child: Text("Cancel Attendance",
+                    style: TextStyle(fontSize: 25),
+                    textAlign: TextAlign.center),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: buildInputWithTitle(
+                    "Justification *",
+                    inputFieldDecoration("Enter justification"),
+                    justificationController,
+                    black: true),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (justificationController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        snackBarStyle("Please write a justification!"));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        snackBarStyle("Successfully canceled the training."));
+                    Navigator.of(context).pop();
+                  }
+                },
+                style: flatButtonStyle,
+                child: const Text("Confirm"),
+              ),
+              const SizedBox(
+                height: 10,
+              )
+            ],
+          ),
         );
       },
     );

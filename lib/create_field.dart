@@ -4,7 +4,8 @@ import 'main.dart';
 import 'utils.dart';
 
 class CreateField extends StatefulWidget {
-  const CreateField({super.key});
+  final Function(Field) onFieldCreated;
+  const CreateField({super.key, required this.onFieldCreated});
 
   @override
   State<CreateField> createState() => _CreateFieldState();
@@ -36,7 +37,7 @@ class _CreateFieldState extends State<CreateField> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Training'),
+        title: const Text('Create Field'),
         centerTitle: true,
       ),
       resizeToAvoidBottomInset: false,
@@ -61,7 +62,7 @@ class _CreateFieldState extends State<CreateField> {
                     ),
                     buildInputWithTitle(
                       "Field Description *",
-                      inputFieldDecoration("Enter field description",
+                      inputFieldDecoration("Enter description",
                           prefixIcon: Icons.badge_outlined),
                       descriptionController,
                     ),
@@ -78,13 +79,13 @@ class _CreateFieldState extends State<CreateField> {
                 style: flatButtonStyle,
                 onPressed: () async {
                   if (validateFields()) {
-                    Navigator.pop(
-                        context,
-                        Field(nameController.text, descriptionController.text,
-                            "field"));
+                    Field createdField = Field(nameController.text,
+                        descriptionController.text, "field");
+                    widget.onFieldCreated(createdField);
+                    Navigator.pop(context, createdField);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(snackBarStyle(
-                        "Train name, modality and duration are required",
+                        "Field name and description are required",
                         warning: true));
                   }
                 },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'main.dart';
 import 'utils.dart';
+import 'create_field.dart';
 
 class CreateTrain extends StatefulWidget {
   const CreateTrain({super.key});
@@ -11,6 +12,7 @@ class CreateTrain extends StatefulWidget {
 }
 
 class _CreateTrainState extends State<CreateTrain> {
+  Field? currentField;
   final nameController = TextEditingController();
   String? selectedModalityValue;
   String? selectDurationValue;
@@ -33,6 +35,12 @@ class _CreateTrainState extends State<CreateTrain> {
       return false;
     }
     return true;
+  }
+
+  void setCurrentField(Field field) {
+    setState(() {
+      currentField = field;
+    });
   }
 
   @override
@@ -108,8 +116,7 @@ class _CreateTrainState extends State<CreateTrain> {
                     height: 50,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius:
-                          BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Center(
                       child: Text(
@@ -163,12 +170,14 @@ class _CreateTrainState extends State<CreateTrain> {
                       ),
                       child: InkWell(
                         onTap: () async {
-                          final result = await Navigator.of(context)
-                              .pushNamed('/createField');
-                          if (result != null && result is Field) {
-                            setState(() {
-                              trainingFields.add(result);
-                            });
+                          createFieldDialog(context);
+                          if (currentField != null) {
+                            setState(
+                              () {
+                                trainingFields.add(currentField!);
+                                currentField = null;
+                              },
+                            );
                           }
                         },
                         child: Container(
@@ -271,6 +280,22 @@ class _CreateTrainState extends State<CreateTrain> {
           ),
         ),
       ),
+    );
+  }
+
+  void createFieldDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // Return the AlertDialog with specific size
+        return AlertDialog(
+          content: SizedBox(
+            width: 400.0, // Set the width as needed
+            height: 400.0, // Set the height as needed
+            child: CreateField(onFieldCreated: setCurrentField),
+          ),
+        );
+      },
     );
   }
 

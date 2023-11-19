@@ -13,6 +13,7 @@ class Train extends StatefulWidget {
 class _TrainState extends State<Train> {
   @override
   Widget build(BuildContext context) {
+    int numFields = getNumFields();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Train Menu'),
@@ -39,7 +40,7 @@ class _TrainState extends State<Train> {
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             labelStyle("Modality", size: 24.0, bold: true),
             const SizedBox(
@@ -47,10 +48,35 @@ class _TrainState extends State<Train> {
             ),
             labelStyle(getTrainModality()),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
-            labelStyle("Fields", size: 24.0, bold: true),
+            labelStyle("Duration", size: 24.0, bold: true),
+            const SizedBox(
+              height: 6,
+            ),
+            labelStyle(getTrainDuration().toString()),
+            const SizedBox(
+              height: 10,
+            ),
+            labelStyle("Fields ($numFields)", size: 24.0, bold: true),
             const CustomLine(),
+            Expanded(
+              child: Center(
+                heightFactor: 200.0,
+                child: ListView.builder(
+                  itemCount: 1,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: getTrains(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
             const CustomLine(),
           ],
         ),
@@ -123,23 +149,55 @@ class _TrainState extends State<Train> {
     return Singleton().getTrain(Singleton().trainId)!.duration;
   }
 
-  void showPopup(String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Tapped Icon"),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("OK"),
+  List<Field> getTrainFields() {
+    return Singleton().getTrain(Singleton().trainId)!.fields;
+  }
+
+  int getNumFields() {
+    return Singleton().getTrain(Singleton().trainId)!.fields.length;
+  }
+
+  List<Widget> getTrains() {
+    List<Widget> widgets = [];
+    if (getTrainFields().isEmpty) {
+      widgets.add(labelStyle("This train has no field added"));
+    } else {
+      for (Field field in getTrainFields()) {
+        String name = field.name;
+        widgets.add(
+          ElevatedButton(
+            style: ButtonStyle(
+              minimumSize: MaterialStateProperty.all(const Size(175, 0)),
+              shape: MaterialStateProperty.all<OutlinedBorder>(
+                const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                ),
+              ),
+              backgroundColor:
+                  MaterialStateProperty.all<Color>(Colors.transparent),
             ),
-          ],
+            onPressed: () {
+              //Decide what to do with clicking on field
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const FlutterLogo(size: 40),
+                const SizedBox(
+                  height: 6,
+                ),
+                labelStyle(name, size: 16.0),
+              ],
+            ),
+          ),
         );
-      },
-    );
+        widgets.add(
+          const SizedBox(
+            height: 8,
+          ),
+        );
+      }
+    }
+    return widgets;
   }
 }

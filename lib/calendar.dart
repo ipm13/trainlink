@@ -269,7 +269,8 @@ class _DayCardState extends State<DayCard> {
               Text(teamName, textAlign: TextAlign.center),
             ],
           ),
-          content: Text("$hours:$minutes", textAlign: TextAlign.center),
+          content: Text("$hours:$minutes - "
+              "${calculateFinalTime(hours, minutes)}", textAlign: TextAlign.center),
           actions: [
             Center(
               child: Column(

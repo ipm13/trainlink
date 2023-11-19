@@ -26,75 +26,72 @@ class _CreateFieldState extends State<CreateField> {
     if (nameController.text.isEmpty) {
       return false;
     }
-    if (descriptionController.text.isEmpty) {
-      return false;
-    }
-
     return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Field'),
-        centerTitle: true,
-      ),
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        decoration: backgroundDecoration(),
-        child: Center(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 10.0),
+          child: labelStyle("Add a Field", bold: true, black: true),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 20.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                margin: const EdgeInsets.only(top: 50.0),
-                child: Column(
-                  children: [
-                    buildInputWithTitle(
-                      "Field Name *",
-                      inputFieldDecoration("Enter train name",
-                          prefixIcon: Icons.badge_outlined),
-                      nameController,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    buildInputWithTitle(
-                      "Field Description *",
-                      inputFieldDecoration("Enter description",
-                          prefixIcon: Icons.badge_outlined),
-                      descriptionController,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                  ],
+              buildInputWithTitle(
+                "Field Name *",
+                inputFieldDecoration(
+                    "Enter field name",
+                    prefixIcon: Icons.badge_outlined
                 ),
+                nameController,
+                black: true
               ),
               const SizedBox(
                 height: 20,
               ),
-              ElevatedButton(
-                style: flatButtonStyle,
-                onPressed: () async {
-                  if (validateFields()) {
-                    Field createdField = Field(nameController.text,
-                        descriptionController.text, "field");
-                    widget.onFieldCreated(createdField);
-                    Navigator.pop(context, createdField);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(snackBarStyle(
-                        "Field name and description are required",
-                        warning: true));
-                  }
-                },
-                child: labelStyle("Create", size: 16.0),
+              buildInputWithTitle(
+                "Field Description",
+                inputFieldDecoration(
+                    "Enter a description",
+                    prefixIcon: Icons.description
+                ),
+                descriptionController,
+                black: true
+              ),
+              const SizedBox(
+                height: 20,
               ),
             ],
           ),
         ),
-      ),
+        const SizedBox(
+          height: 20,
+        ),
+        ElevatedButton(
+          style: flatButtonStyle,
+          onPressed: () async {
+            if (validateFields()) {
+              Field createdField = Field(
+                  nameController.text,
+                  descriptionController.text.isNotEmpty ? descriptionController.text : "No description",
+                  "field"
+              );
+              widget.onFieldCreated(createdField);
+              Navigator.pop(context, createdField);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(snackBarStyle(
+                  "Field name is required",
+                  warning: true));
+            }
+          },
+          child: labelStyle("Create", size: 16.0),
+        ),
+      ],
     );
   }
 }

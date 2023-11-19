@@ -141,11 +141,12 @@ AlertDialog popup(context, {String route = '', required List<Widget> widgets}) {
 Widget buildInputWithTitle(
     String title,
     InputDecoration inputDecoration,
-    TextEditingController tController) {
+    TextEditingController tController,
+    {bool black = false}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      labelStyle(" $title"),
+      black ? labelStyle(" $title", black: true) : labelStyle(" $title"),
       TextField(
         style: inputStyle(),
         controller: tController,
@@ -215,7 +216,7 @@ BottomNavigationBar bottomBar(BuildContext context, int currentIndex) {
     onTap: (index) => {
       if (currentIndex != index) {
         if(index == 0) Navigator.pushReplacementNamed(context, "/home"),
-        if(index == 1) Navigator.pushReplacementNamed(context, "/training"),
+        if(index == 1) Navigator.pushReplacementNamed(context, "/repertoire"),
         if(index == 2) Navigator.pushReplacementNamed(context, "/calendar"),
         if(index == 3) Navigator.pushReplacementNamed(context, "/profile")
       }

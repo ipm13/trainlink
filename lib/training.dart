@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:trainlink/main.dart';
 
 import 'image_widget.dart';
-import 'main.dart';
 import 'utils.dart';
 
 class Training extends StatefulWidget {
@@ -14,9 +14,10 @@ class Training extends StatefulWidget {
 class _TrainingState extends State<Training> {
   @override
   Widget build(BuildContext context) {
+    int numFields = getNumFields();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Trainings"),
+        title: const Text('Training Menu'),
         centerTitle: true,
       ),
       body: Container(
@@ -24,13 +25,35 @@ class _TrainingState extends State<Training> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 30),
+                labelStyle(getTrainingName(), size: 22.0),
+              ],
             ),
-            labelStyle("All Trainings", size: 24.0, bold: true),
+            const SizedBox(
+              height: 20,
+            ),
+            labelStyle("Modality", size: 24.0, bold: true),
+            const SizedBox(
+              height: 6,
+            ),
+            labelStyle(getTrainingModality()),
+            const SizedBox(
+              height: 20,
+            ),
+            labelStyle("Duration", size: 24.0, bold: true),
+            const SizedBox(
+              height: 6,
+            ),
+            labelStyle("${getTrainingDuration()} minutes"),
+            const SizedBox(
+              height: 20,
+            ),
+            labelStyle("Fields ($numFields)", size: 24.0, bold: true),
             const CustomLine(),
             Expanded(
-              flex: 4,
               child: Center(
                 heightFactor: 200.0,
                 child: ListView.builder(
@@ -40,7 +63,7 @@ class _TrainingState extends State<Training> {
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: getTrains(),
+                        children: getTrainings(),
                       ),
                     );
                   },
@@ -48,51 +71,44 @@ class _TrainingState extends State<Training> {
               ),
             ),
             const CustomLine(),
-            Expanded(
-              flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(
-                    width: 250,
-                    child: ElevatedButton.icon(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              const Color.fromRGBO(24, 231, 114, 1.0)
-                          )
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pushNamed('/createTrain');
-                      },
-                      icon: const Icon(
-                        Icons.add_circle_sharp,
-                        color: Colors.black54,
-                      ),
-                      label: buttonLabelStyle("Create Training"),
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),
       bottomNavigationBar: bottomBar(context, 1),
     );
   }
-  List<Widget> getTrains() {
+
+  String getTrainingName() {
+    return Singleton().getTraining(Singleton().trainId)!.name;
+  }
+
+  String getTrainingModality() {
+    return Singleton().getTraining(Singleton().trainId)!.modality;
+  }
+
+  int getTrainingDuration() {
+    return Singleton().getTraining(Singleton().trainId)!.duration;
+  }
+
+  List<Field> getTrainingFields() {
+    return Singleton().getTraining(Singleton().trainId)!.fields;
+  }
+
+  int getNumFields() {
+    return Singleton().getTraining(Singleton().trainId)!.fields.length;
+  }
+
+  List<Widget> getTrainings() {
     List<Widget> widgets = [];
-    if (Singleton().getTrains()!.isEmpty) {
-      widgets.add(labelStyle("You have", size:25.0));
-      widgets.add(labelStyle("0",size:200.0, bold:true));
-      widgets.add(labelStyle("Trains", size:25.0));
+    if (getTrainingFields().isEmpty) {
+      widgets.add(labelStyle("This train has no field added"));
     } else {
-      Singleton().getTrains()?.forEach((id, train) {
-        String name = train.name;
+      for (Field field in getTrainingFields()) {
+        String name = field.name;
         widgets.add(
           ElevatedButton(
             style: ButtonStyle(
-              fixedSize: MaterialStateProperty.all(const Size(175, 50)),
+              minimumSize: MaterialStateProperty.all(const Size(175, 50)),
               shape: MaterialStateProperty.all<OutlinedBorder>(
                 const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -102,15 +118,9 @@ class _TrainingState extends State<Training> {
                   MaterialStateProperty.all<Color>(Colors.transparent),
             ),
             onPressed: () {
-              Singleton().trainId = id;
-              Navigator.of(context).pushNamed('/train');
+              //Decide what to do with clicking on field
             },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                labelStyle(name, size: 16.0),
-              ],
-            ),
+            child: labelStyle(name, size: 16.0),
           ),
         );
         widgets.add(
@@ -118,7 +128,7 @@ class _TrainingState extends State<Training> {
             height: 8,
           ),
         );
-      });
+      }
     }
     return widgets;
   }

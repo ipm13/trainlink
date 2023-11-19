@@ -67,11 +67,11 @@ class _RegisterState extends State<Register> {
                   ImageWidget(
                     image: image,
                     defaultImagePath: 'assets/images/profile.png',
-                    size: 160,
+                    size: 130,
                     onClicked: (source) => pickImage(source),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
                     child: Column(
                       children: [
                         Row(
@@ -151,7 +151,7 @@ class _RegisterState extends State<Register> {
             ),
           ],
         ),
-      )
+      ),
     );
   }
 

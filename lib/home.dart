@@ -140,16 +140,17 @@ class _HomeState extends State<Home> {
   List<Widget> getTeams() {
     List<Widget> widgets = [];
     if (Singleton().getTeams()!.isEmpty) {
-      widgets.add(
-        labelStyle("You're not part of any team")
-      );
+      widgets.add(const SizedBox(height: 120));
+      widgets.add(labelStyle("You're not part of any team"));
+      widgets.add(const SizedBox(height: 8));
+      widgets.add(labelStyle("Try creating one"));
     } else {
       Singleton().getTeams()?.forEach((id, team) {
         String name = team.name;
         widgets.add(
           ElevatedButton(
             style: ButtonStyle(
-              fixedSize: MaterialStateProperty.all(const Size(175, 120)),
+              fixedSize: MaterialStateProperty.all(const Size(175, 90)),
               shape: MaterialStateProperty.all<OutlinedBorder>(
                 const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),

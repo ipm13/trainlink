@@ -44,7 +44,7 @@ class _Register2State extends State<Register2> {
               key: _formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30),
+                padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: Column(
                   children: [
                     Row(

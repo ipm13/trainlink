@@ -56,7 +56,7 @@ class _TeamState extends State<CreateTeam> {
               ImageWidget(
                 image: image,
                 defaultImagePath: 'assets/images/gallery.png',
-                size: 160,
+                size: 130,
                 onClicked: (source) => pickImage(source),
               ),
               Padding(

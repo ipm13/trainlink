@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trainlink/main.dart';
 
+import 'image_widget.dart';
 import 'utils.dart';
 
 class Team extends StatefulWidget {
@@ -31,11 +32,15 @@ class _TeamState extends State<Team> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const FlutterLogo(size: 80),
+                  const ImageWidget(
+                    image: null,
+                    defaultImagePath: 'assets/images/gallery.png',
+                    size: 80,
+                  ),
                   const SizedBox(
                     height: 6,
                   ),
-                  labelStyle(getTeamName()),
+                  labelStyle(getTeamName(), size: 22.0),
                 ],
               ),
             ),

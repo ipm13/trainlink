@@ -81,24 +81,24 @@ class Singleton {
   // Training
   // TODO
 
-  HashMap<int, Train>? trains = HashMap();
+  HashMap<int, Training>? trains = HashMap();
   int? trainId;
 
-  void addTrain(String name, String modality, int duration, List<Field> fields) {
+  void addTraining(String name, String modality, int duration, List<Field> fields) {
     trains ??= HashMap();
     int id = trains!.length + 1;
-    trains![id] = Train(name, modality, duration, fields);
+    trains![id] = Training(name, modality, duration, fields);
   }
 
-  HashMap<int, Train>? getTrains() {
+  HashMap<int, Training>? getTrainings() {
     return trains;
   }
 
-  Train? getTrain(int? id) {
+  Training? getTraining(int? id) {
     return trains?[id];
   }
 
-  int? getTrainCount() {
+  int? getTrainingCount() {
     return trains?.length;
   }
 
@@ -110,12 +110,12 @@ class Team {
   Team(this.name, this.modality);
 }
 
-class Train {
+class Training {
   final String name, modality;
   final int duration;
   final List<Field> fields;
 
-  Train(this.name, this.modality, this.duration, this.fields);
+  Training(this.name, this.modality, this.duration, this.fields);
 }
 
 class Field {

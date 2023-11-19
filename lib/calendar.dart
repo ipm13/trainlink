@@ -25,15 +25,15 @@ class _CalendarState extends State<Calendar> {
     List<DateTime> nextSevenDays = getWeeklyOrder();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("My Calendar"),
-        centerTitle: true,
-      ),
       body: Container(
         decoration: backgroundDecoration(),
         child: Column(
           children: [
-            const SizedBox(height: 16),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
+            ),
+            const SizedBox(height: 40),
+            labelStyle("My Calendar", size: 24.0, bold: true),
             Expanded(
               flex: 7,
               child: Padding(
@@ -173,7 +173,7 @@ class DayCard extends StatelessWidget {
               const Text("Team Name", textAlign: TextAlign.center),
                 ],
           ),
-          content: const Text("Train Time", textAlign: TextAlign.center),
+          content: const Text("Training Time", textAlign: TextAlign.center),
           actions: [
             Center(
               child: Column(

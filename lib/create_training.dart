@@ -4,14 +4,14 @@ import 'main.dart';
 import 'utils.dart';
 import 'create_field.dart';
 
-class CreateTrain extends StatefulWidget {
-  const CreateTrain({super.key});
+class CreateTraining extends StatefulWidget {
+  const CreateTraining({super.key});
 
   @override
-  State<CreateTrain> createState() => _CreateTrainState();
+  State<CreateTraining> createState() => _CreateTrainingState();
 }
 
-class _CreateTrainState extends State<CreateTrain> {
+class _CreateTrainingState extends State<CreateTraining> {
   Field? currentField;
   final nameController = TextEditingController();
   String? selectedModalityValue;
@@ -57,14 +57,14 @@ class _CreateTrainState extends State<CreateTrain> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(
-              margin: const EdgeInsets.only(top: 25.0),
+              margin: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 30.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
                     child: buildInputWithTitle(
-                      "Train Name *",
-                      inputFieldDecoration("Enter your train name",
+                      "Training Name *",
+                      inputFieldDecoration("Enter your training name",
                           prefixIcon: Icons.badge_outlined),
                       nameController,
                     ),
@@ -91,7 +91,7 @@ class _CreateTrainState extends State<CreateTrain> {
                   Container(
                     child: buildDropdownWithTitle(
                       "Duration *",
-                      Text("Pick train duration", style: inputStyle()),
+                      Text("Pick duration", style: inputStyle()),
                       ["30", "45", "60", "75", "90", "105", "120"],
                       selectDurationValue,
                       (String? selectedValue) {
@@ -108,20 +108,13 @@ class _CreateTrainState extends State<CreateTrain> {
                     width: 85,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      //color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Center(
-                      child: Text(
-                        'Fields:',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                    child: Center(
+                      child: labelStyle("Fields", bold: true)
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -145,7 +138,7 @@ class _CreateTrainState extends State<CreateTrain> {
                                 height: 50,
                                 decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: Colors.green,
+                                  color: Color.fromRGBO(24, 231, 114, 1.0),
                                 ),
                                 child: Center(
                                   child: Text("$index"),
@@ -159,11 +152,16 @@ class _CreateTrainState extends State<CreateTrain> {
                     Container(
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.green,
+                        color: Color.fromRGBO(24, 231, 114, 1.0),
                       ),
                       child: InkWell(
                         onTap: () async {
-                          createFieldDialog(context);
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                createFieldDialog(context)
+                          );
+                          //createFieldDialog(context);
                           if (currentField != null) {
                             setState(
                               () {
@@ -177,12 +175,12 @@ class _CreateTrainState extends State<CreateTrain> {
                           width: 50,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.green,
+                            color: Color.fromRGBO(24, 231, 114, 1.0),
                           ),
                           child: const Center(
                             child: Icon(
                               Icons.add,
-                              color: Colors.white,
+                              color: Colors.black54,
                               size: 40,
                             ),
                           ),
@@ -200,7 +198,7 @@ class _CreateTrainState extends State<CreateTrain> {
               style: flatButtonStyle,
               onPressed: () async {
                 if (validateFields()) {
-                  Singleton().addTrain(
+                  Singleton().addTraining(
                       nameController.text,
                       selectedModalityValue!,
                       int.parse(selectDurationValue!),
@@ -208,12 +206,13 @@ class _CreateTrainState extends State<CreateTrain> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) =>
-                        createTrainDialog(context, nameController.text),
+                        createTrainingDialog(context, nameController.text),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(snackBarStyle(
-                      "Train name, modality and duration are required",
-                      warning: true));
+                      "Name, modality and duration required",
+                      warning: true)
+                  );
                 }
               },
               child: labelStyle("Create", size: 16.0),
@@ -228,7 +227,7 @@ class _CreateTrainState extends State<CreateTrain> {
     );
   }
 
-  void createFieldDialog(BuildContext context) {
+  /*void createFieldDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -242,15 +241,24 @@ class _CreateTrainState extends State<CreateTrain> {
         );
       },
     );
+  }*/
+
+  Widget createFieldDialog(BuildContext context) {
+    return popup(
+      context,
+      widgets: [
+        CreateField(onFieldCreated: setCurrentField),
+      ]
+    );
   }
 
-  Widget createTrainDialog(BuildContext context, String trainName) {
-    return popup(context, route: '/training', widgets: [
+  Widget createTrainingDialog(BuildContext context, String trainingName) {
+    return popup(context, route: '/repertoire', widgets: [
       Padding(
         padding: const EdgeInsets.fromLTRB(16.0, 60.0, 16.0, 30.0),
         child: Column(
           children: [
-            labelStyle("$trainName was created!", bold: true, black: true),
+            labelStyle("$trainingName was created!", bold: true, black: true),
             const SizedBox(height: 20),
           ],
         ),

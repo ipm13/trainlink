@@ -10,6 +10,9 @@ import 'home.dart';
 import 'team.dart';
 import 'create_team.dart';
 import 'calendar.dart';
+import 'training.dart';
+import 'create_train.dart';
+import 'train.dart';
 
 class RouteGenerator
 {
@@ -36,6 +39,12 @@ class RouteGenerator
         return MaterialPageRoute(builder: (_) => const Calendar());
       case '/schedule':
         return MaterialPageRoute(builder: (_) => const Schedule());
+      case '/training':
+        return MaterialPageRoute(builder: (_) => const Training());
+      case '/createTrain':
+        return MaterialPageRoute(builder: (_) => const CreateTrain());
+      case '/train':
+          return MaterialPageRoute(builder: (_) => const Train());
     }
 
     return MaterialPageRoute(builder: (_) => const ErrorRoute());

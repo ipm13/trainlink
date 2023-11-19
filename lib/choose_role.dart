@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'utils.dart';
 
@@ -10,16 +11,10 @@ class ChooseRole extends StatefulWidget {
 }
 
 class _ChooseRoleState extends State<ChooseRole> {
-  final _formKey = GlobalKey<FormState>();
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
+  void _setRole(String role) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('role', role);
   }
 
   @override
@@ -40,7 +35,7 @@ class _ChooseRoleState extends State<ChooseRole> {
                 children: [
                   InkWell(
                     onTap: () {
-                      print("Coach");
+                      _setRole("Coach");
                       Navigator.of(context).pushNamed('/register');
                     },
                     child: Column(
@@ -61,7 +56,7 @@ class _ChooseRoleState extends State<ChooseRole> {
                   ),
                   InkWell(
                     onTap: () {
-                      print("Player");
+                      _setRole("Player");
                       Navigator.of(context).pushNamed('/register');
                     },
                     child: Column(

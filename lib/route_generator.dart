@@ -13,6 +13,8 @@ import 'calendar.dart';
 import 'repertoire.dart';
 import 'create_training.dart';
 import 'training.dart';
+import 'profile.dart';
+import 'edit_profile.dart';
 
 class RouteGenerator
 {
@@ -45,6 +47,10 @@ class RouteGenerator
         return MaterialPageRoute(builder: (_) => const CreateTraining());
       case '/training':
         return MaterialPageRoute(builder: (_) => const Training());
+      case '/profile':
+        return MaterialPageRoute(builder: (_) => const Profile());
+      case '/editProfile':
+        return MaterialPageRoute(builder: (_) => const EditProfile());
     }
 
     return MaterialPageRoute(builder: (_) => const ErrorRoute());

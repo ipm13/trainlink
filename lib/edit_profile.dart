@@ -48,7 +48,6 @@ class _EditProfileState extends State<EditProfile> {
                 const EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
             child: SingleChildScrollView(
               child: Column(
-                //mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ImageWidget(
@@ -86,7 +85,7 @@ class _EditProfileState extends State<EditProfile> {
                     inputFieldDecoration("Enter a new phone number"),
                     mobilePhoneController,
                   ),
-                  const SizedBox(height: 80.0),
+                  const SizedBox(height: 40.0),
                   Center(
                     child: ElevatedButton(
                       onPressed: () {

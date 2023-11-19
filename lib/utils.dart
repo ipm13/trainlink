@@ -234,15 +234,15 @@ FutureBuilder<String> bottomBar(BuildContext context, int currentIndex) {
           onTap: (index) {
             if (currentIndex != index) {
               if (index == 0) {
-                Navigator.pushReplacementNamed(context, "/home");
+                Navigator.pushNamed(context, "/home");
               } else if (index == 1) {
-                Navigator.pushReplacementNamed(
+                Navigator.pushNamed(
                     context, coach ? "/repertoire" : "/calendar");
               } else if (index == 2) {
-                Navigator.pushReplacementNamed(
+                Navigator.pushNamed(
                     context, coach ? "/calendar" : "/profile");
               } else if (coach && index == 3) {
-                Navigator.pushReplacementNamed(context, "/profile");
+                Navigator.pushNamed(context, "/profile");
               }
             }
           },

@@ -23,6 +23,7 @@ class _CalendarState extends State<Calendar> {
 
   Future<String> getRole() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('role', "Player");
     String? storedRole = prefs.getString("role");
     return storedRole ?? "";
   }
@@ -73,7 +74,9 @@ class _CalendarState extends State<Calendar> {
                       Expanded(
                         flex: 1,
                         child: Row(
-                          mainAxisAlignment: role.contains("Coach") ? MainAxisAlignment.spaceAround : MainAxisAlignment.center,
+                          mainAxisAlignment: role.contains("Coach")
+                              ? MainAxisAlignment.spaceAround
+                              : MainAxisAlignment.center,
                           children: [
                             SizedBox(
                               width: 180,
@@ -93,25 +96,26 @@ class _CalendarState extends State<Calendar> {
                                 label: buttonLabelStyle('Monthly View'),
                               ),
                             ),
-                            if(role.contains("Coach"))
-                            SizedBox(
-                              width: 180,
-                              child: ElevatedButton.icon(
-                                style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            const Color.fromRGBO(
-                                                24, 231, 114, 1.0))),
-                                onPressed: () {
-                                  Navigator.of(context).pushNamed('/schedule');
-                                },
-                                icon: const Icon(
-                                  Icons.add_circle_sharp,
-                                  color: Colors.black54,
+                            if (role.contains("Coach"))
+                              SizedBox(
+                                width: 180,
+                                child: ElevatedButton.icon(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              const Color.fromRGBO(
+                                                  24, 231, 114, 1.0))),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pushNamed('/schedule');
+                                  },
+                                  icon: const Icon(
+                                    Icons.add_circle_sharp,
+                                    color: Colors.black54,
+                                  ),
+                                  label: buttonLabelStyle('Schedule'),
                                 ),
-                                label: buttonLabelStyle('Schedule'),
                               ),
-                            ),
                           ],
                         ),
                       ),
@@ -129,7 +133,7 @@ class _CalendarState extends State<Calendar> {
   }
 }
 
-class DayCard extends StatelessWidget {
+class DayCard extends StatefulWidget {
   final DateTime date;
   final String eventInfo;
   final String role;
@@ -141,15 +145,22 @@ class DayCard extends StatelessWidget {
       required this.role});
 
   @override
+  State<DayCard> createState() => _DayCardState();
+}
+
+class _DayCardState extends State<DayCard> {
+  final justificationController = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showPopup(date, eventInfo, context);
+        showPopup(widget.date, widget.eventInfo, context);
       },
       child: Column(
         children: [
           Text(
-            DateFormat('EEEE').format(date.toLocal()),
+            DateFormat('EEEE').format(widget.date.toLocal()),
             style: const TextStyle(
                 fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
           ),
@@ -165,7 +176,7 @@ class DayCard extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    eventInfo,
+                    widget.eventInfo,
                     style: const TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ],
@@ -190,7 +201,6 @@ class DayCard extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                      // Add functionality for the "X" icon button
                       Navigator.of(context).pop();
                     },
                     alignment: Alignment.centerRight,
@@ -211,7 +221,7 @@ class DayCard extends StatelessWidget {
                       Navigator.of(context).pushNamed("Not Implemented");
                     },
                     style: flatButtonStyle,
-                    child: Text(role.contains("Coach")
+                    child: Text(widget.role.contains("Coach")
                         ? "Reschedule"
                         : "Check Training"),
                   ),
@@ -220,20 +230,21 @@ class DayCard extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      if (role.contains("Coach")) {
+                      if (widget.role.contains("Coach")) {
                         Navigator.of(context).pushNamed("Not Implemented");
                       } else {
-                        // Another Popup
+                        showCancelAttendance(context);
                       }
                     },
                     style: flatButtonStyle,
-                    child: Text(role.contains("Coach")
+                    child: Text(widget.role.contains("Coach")
                         ? "Check Attendance"
                         : "Cancel Attendance"),
                   ),
                   const SizedBox(
                     height: 20,
                   ),
+                  if(widget.role.contains("Coach"))
                   IconButton(
                     onPressed: () {
                       Navigator.of(context).pushNamed("Not Implemented");
@@ -244,6 +255,53 @@ class DayCard extends StatelessWidget {
               ),
             )
           ],
+        );
+      },
+    );
+  }
+
+  void showCancelAttendance(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(top: 10, right: 5),
+                child: Text("Cancel Attendance", style: TextStyle(fontSize: 25), textAlign: TextAlign.center),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: buildInputWithTitle(
+                  "Justification *",
+                  inputFieldDecoration("Enter justification"),
+                  justificationController,
+                  black: true
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if(justificationController.text.isEmpty){
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        snackBarStyle("Please write a justification!")
+                    );
+                  }else{
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        snackBarStyle("Successfully canceled the training.")
+                    );
+                    Navigator.of(context).pop();
+                  }
+                },
+                style: flatButtonStyle,
+                child: const Text("Confirm"),
+              ),
+              const SizedBox(
+                height: 10,
+              )
+            ],
+          ),
         );
       },
     );

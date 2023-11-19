@@ -80,34 +80,30 @@ class _LoginState extends State<Login> {
                       controller: passwordController,
                       obscureText: true,
                       decoration: inputFieldDecoration("Enter your password", prefixIcon: Icons.lock, suffixIcon: Icons.visibility_off),
-                      validator: (val) => val!.length < 6 ? 'Password too short.' : null,
+                      validator: (value) => value!.length > 1 ? null : "Please enter a valid password",
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          snackBarStyle("Enter an email and a password")
+                        );
+                      },
                       child: labelStyle("Forgot Password?", size: 16.0),
                     ),
                     const Padding(padding: EdgeInsets.only(top: 40)),
                     ElevatedButton(
                       style: flatButtonStyle,
                       onPressed: () async {
-                        _setUser();
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) => const Home()),
-                          (route) => false,
-                        );
-                        /*
-                    if (_formKey.currentState!.validate()) {
-                      String email = emailController.text;
-                      String password = passwordController.text;
-                      await getAccount(email, password).then((value) {
-                        if (!value){
+                        if (_formKey.currentState!.validate()) {
+                          _setUser();
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (context) => const Home()), (route) => false,
+                          );
+                        } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Your credentials are incorrect")));
-                        }else{
-                          Navigator.of(context).pushReplacementNamed('/profiles');
+                            snackBarStyle("Invalid login credentials", warning: true)
+                          );
                         }
-                      });
-                    }*/
                       },
                       child: labelStyle("Sign In"),
                     ),

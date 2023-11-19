@@ -82,6 +82,7 @@ class _ScheduleState extends State<Schedule> {
         title: const Text("Create training schedule"),
         centerTitle: true,
       ),
+      resizeToAvoidBottomInset: false,
       body: Container(
           decoration: backgroundDecoration(),
           child: Center(

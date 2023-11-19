@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trainlink/utils.dart';
 
 class Calendar extends StatefulWidget {
@@ -20,98 +21,124 @@ class _CalendarState extends State<Calendar> {
     return nextSevenDays;
   }
 
+  Future<String> getRole() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? storedRole = prefs.getString("role");
+    return storedRole ?? "";
+  }
+
   @override
   Widget build(BuildContext context) {
     List<DateTime> nextSevenDays = getWeeklyOrder();
 
     return Scaffold(
-      body: Container(
-        decoration: backgroundDecoration(),
-        child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
-            ),
-            const SizedBox(height: 40),
-            labelStyle("My Calendar", size: 24.0, bold: true),
-            Expanded(
-              flex: 7,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: ListView.builder(
-                  itemCount: nextSevenDays.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Column(
-                      children: [
-                        DayCard(
-                            date: nextSevenDays[index],
-                            eventInfo:
-                                "Event details for ${nextSevenDays[index]}"),
-                        if (index < nextSevenDays.length - 1)
-                          const CustomLine(),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(
-                    width: 180,
-                    child: ElevatedButton.icon(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              const Color.fromRGBO(24, 231, 114, 1.0)
-                          )
+        body: Container(
+          decoration: backgroundDecoration(),
+          child: FutureBuilder<String>(
+              future: getRole(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  // Assign the value to 'role' after the Future completes
+                  String role = snapshot.data ?? "";
+                  return Column(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16),
                       ),
-                      onPressed: () {
-                        // Add functionality for the button
-                      },
-                      icon: const Icon(
-                        Icons.remove_red_eye,
-                        color: Colors.black54,
+                      const SizedBox(height: 40),
+                      labelStyle("My Calendar", size: 24.0, bold: true),
+                      Expanded(
+                        flex: 7,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: ListView.builder(
+                            itemCount: nextSevenDays.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Column(
+                                children: [
+                                  DayCard(
+                                    date: nextSevenDays[index],
+                                    eventInfo:
+                                        "Event details for ${nextSevenDays[index]}",
+                                    role: role,
+                                  ),
+                                  if (index < nextSevenDays.length - 1)
+                                    const CustomLine(),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
                       ),
-                      label: buttonLabelStyle('Monthly View'),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 180,
-                    child: ElevatedButton.icon(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              const Color.fromRGBO(24, 231, 114, 1.0)
-                          )
+                      Expanded(
+                        flex: 1,
+                        child: Row(
+                          mainAxisAlignment: role.contains("Coach") ? MainAxisAlignment.spaceAround : MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 180,
+                              child: ElevatedButton.icon(
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            const Color.fromRGBO(
+                                                24, 231, 114, 1.0))),
+                                onPressed: () {
+                                  // Add functionality for the button
+                                },
+                                icon: const Icon(
+                                  Icons.remove_red_eye,
+                                  color: Colors.black54,
+                                ),
+                                label: buttonLabelStyle('Monthly View'),
+                              ),
+                            ),
+                            if(role.contains("Coach"))
+                            SizedBox(
+                              width: 180,
+                              child: ElevatedButton.icon(
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            const Color.fromRGBO(
+                                                24, 231, 114, 1.0))),
+                                onPressed: () {
+                                  Navigator.of(context).pushNamed('/schedule');
+                                },
+                                icon: const Icon(
+                                  Icons.add_circle_sharp,
+                                  color: Colors.black54,
+                                ),
+                                label: buttonLabelStyle('Schedule'),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pushNamed('/schedule');
-                      },
-                      icon: const Icon(
-                        Icons.add_circle_sharp,
-                        color: Colors.black54,
-                      ),
-                      label: buttonLabelStyle('Schedule'),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+                    ],
+                  );
+                } else {
+                  // Show a loading indicator while the Future is still running
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }),
         ),
-      ),
-      bottomNavigationBar: bottomBar(context, 2)
-    );
+        bottomNavigationBar: bottomBar(context, 2));
   }
 }
 
 class DayCard extends StatelessWidget {
   final DateTime date;
   final String eventInfo;
+  final String role;
 
-  const DayCard({super.key, required this.date, required this.eventInfo});
+  const DayCard(
+      {super.key,
+      required this.date,
+      required this.eventInfo,
+      required this.role});
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +150,8 @@ class DayCard extends StatelessWidget {
         children: [
           Text(
             DateFormat('EEEE').format(date.toLocal()),
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+            style: const TextStyle(
+                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           Center(
             child: Container(
@@ -157,21 +185,21 @@ class DayCard extends StatelessWidget {
           titlePadding: const EdgeInsets.only(top: 5, right: 5),
           title: Column(
             children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        // Add functionality for the "X" icon button
-                        Navigator.of(context).pop();
-                      },
-                      alignment: Alignment.centerRight,
-                      icon: const Icon(Icons.close, size: 35),
-                    ),
-                  ],
-                ),
-              const Text("Team Name", textAlign: TextAlign.center),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      // Add functionality for the "X" icon button
+                      Navigator.of(context).pop();
+                    },
+                    alignment: Alignment.centerRight,
+                    icon: const Icon(Icons.close, size: 35),
+                  ),
                 ],
+              ),
+              const Text("Team Name", textAlign: TextAlign.center),
+            ],
           ),
           content: const Text("Training Time", textAlign: TextAlign.center),
           actions: [
@@ -180,30 +208,35 @@ class DayCard extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      // Add functionality for the first button
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pushNamed("Not Implemented");
                     },
                     style: flatButtonStyle,
-                    child: const Text("Reschedule"),
+                    child: Text(role.contains("Coach")
+                        ? "Reschedule"
+                        : "Check Training"),
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // Add functionality for the second button
-                      Navigator.of(context).pop();
+                      if (role.contains("Coach")) {
+                        Navigator.of(context).pushNamed("Not Implemented");
+                      } else {
+                        // Another Popup
+                      }
                     },
                     style: flatButtonStyle,
-                    child: const Text("Check Attendance"),
+                    child: Text(role.contains("Coach")
+                        ? "Check Attendance"
+                        : "Cancel Attendance"),
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   IconButton(
                     onPressed: () {
-                      // Add functionality for the trash icon button
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pushNamed("Not Implemented");
                     },
                     icon: const Icon(Icons.delete, size: 35),
                   ),
@@ -215,6 +248,4 @@ class DayCard extends StatelessWidget {
       },
     );
   }
-
 }
-

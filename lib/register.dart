@@ -1,10 +1,9 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trainlink/image_widget.dart';
 
@@ -163,7 +162,9 @@ class _RegisterState extends State<Register> {
       final imageTemp = File(image.path);
       setState(() => this.image = imageTemp);
     } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
+      if (kDebugMode) {
+        print('Failed to pick image: $e');
+      }
     }
   }
 

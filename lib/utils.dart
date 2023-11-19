@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-Text labelStyle(String label, {double size = 18.0, bool bold = false, bool green = false, bool black = false}) {
+Text labelStyle(String label,
+    {double size = 18.0,
+    bool bold = false,
+    bool green = false,
+    bool black = false}) {
   return Text(label,
-    style: TextStyle(
-      color: green ? const Color.fromRGBO(24, 231, 114, 1.0) : black ? Colors.black54 : Colors.white,
-      fontSize: size,
-      fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-    )
-  );
+      style: TextStyle(
+        color: green
+            ? const Color.fromRGBO(24, 231, 114, 1.0)
+            : black
+                ? Colors.black54
+                : Colors.white,
+        fontSize: size,
+        fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+      ));
 }
 
 Text buttonLabelStyle(String label, {double size = 16.0}) {
@@ -16,17 +24,15 @@ Text buttonLabelStyle(String label, {double size = 16.0}) {
         color: Colors.black54,
         fontSize: size,
         fontWeight: FontWeight.bold,
-      )
-  );
+      ));
 }
 
 Text infoStyle(String info, {bool black = false}) {
   return Text(info,
-    style: TextStyle(
-      color: black ? Colors.black54 : Colors.white,
-      fontSize: 14,
-    )
-  );
+      style: TextStyle(
+        color: black ? Colors.black54 : Colors.white,
+        fontSize: 14,
+      ));
 }
 
 TextStyle inputStyle() {
@@ -56,7 +62,8 @@ SnackBar snackBarStyle(String label, {bool warning = false}) {
         fontWeight: FontWeight.bold,
       ),
     ),
-    backgroundColor: warning ? Colors.redAccent : const Color.fromRGBO(24, 231, 114, 1.0),
+    backgroundColor:
+        warning ? Colors.redAccent : const Color.fromRGBO(24, 231, 114, 1.0),
   );
 }
 
@@ -69,33 +76,37 @@ BoxDecoration backgroundDecoration() {
   );
 }
 
-InputDecoration inputFieldDecoration(String hint, {IconData? prefixIcon, IconData? suffixIcon}) {
+InputDecoration inputFieldDecoration(String hint,
+    {IconData? prefixIcon, IconData? suffixIcon}) {
   return InputDecoration(
-    labelStyle: const TextStyle(color: Colors.black54),
-    prefixIcon: prefixIcon != null ? Padding(
-      padding: const EdgeInsets.only(),
-      child: Icon(
-        prefixIcon,
-        color: Colors.black54,
+      labelStyle: const TextStyle(color: Colors.black54),
+      prefixIcon: prefixIcon != null
+          ? Padding(
+              padding: const EdgeInsets.only(),
+              child: Icon(
+                prefixIcon,
+                color: Colors.black54,
+              ),
+            )
+          : null,
+      suffixIcon: prefixIcon != null
+          ? Padding(
+              padding: const EdgeInsets.only(),
+              child: Icon(
+                suffixIcon,
+                color: Colors.black54,
+              ),
+            )
+          : null,
+      contentPadding: const EdgeInsets.only(left: 25),
+      border: const OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
       ),
-    ) : null,
-    suffixIcon: prefixIcon != null ? Padding(
-      padding: const EdgeInsets.only(),
-      child: Icon(
-        suffixIcon,
-        color: Colors.black54,
-      ),
-    ) : null,
-    contentPadding: const EdgeInsets.only(left: 25),
-    border: const OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-    ),
-    filled: true,
-    fillColor: Colors.white,
-    floatingLabelBehavior: FloatingLabelBehavior.never,
-    hintText: hint,
-    hintStyle: inputStyle()
-  );
+      filled: true,
+      fillColor: Colors.white,
+      floatingLabelBehavior: FloatingLabelBehavior.never,
+      hintText: hint,
+      hintStyle: inputStyle());
 }
 
 AlertDialog popup(context, {String route = '', required List<Widget> widgets}) {
@@ -138,9 +149,7 @@ AlertDialog popup(context, {String route = '', required List<Widget> widgets}) {
   );
 }
 
-Widget buildInputWithTitle(
-    String title,
-    InputDecoration inputDecoration,
+Widget buildInputWithTitle(String title, InputDecoration inputDecoration,
     TextEditingController tController,
     {bool black = false}) {
   return Column(
@@ -156,12 +165,8 @@ Widget buildInputWithTitle(
   );
 }
 
-Widget buildDropdownWithTitle(
-    String title,
-    Text hint,
-    List<String> items,
-    String? selectedVariable,
-    void Function(String?) onValueChanged) {
+Widget buildDropdownWithTitle(String title, Text hint, List<String> items,
+    String? selectedVariable, void Function(String?) onValueChanged) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -184,10 +189,7 @@ Widget buildDropdownWithTitle(
           },
           value: selectedVariable,
           style: inputStyle(),
-          icon: const Icon(
-              Icons.arrow_drop_down,
-              color: Colors.black54
-          ),
+          icon: const Icon(Icons.arrow_drop_down, color: Colors.black54),
           hint: hint,
           isExpanded: true,
         ),
@@ -210,39 +212,80 @@ class CustomLine extends StatelessWidget {
   }
 }
 
-BottomNavigationBar bottomBar(BuildContext context, int currentIndex) {
-  return BottomNavigationBar(
-    currentIndex: currentIndex,
-    onTap: (index) => {
-      if (currentIndex != index) {
-        if(index == 0) Navigator.pushReplacementNamed(context, "/home"),
-        if(index == 1) Navigator.pushReplacementNamed(context, "/repertoire"),
-        if(index == 2) Navigator.pushReplacementNamed(context, "/calendar"),
-        if(index == 3) Navigator.pushReplacementNamed(context, "/profile")
+Future<String> getRole() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('role', "Coach");
+  String? storedRole = prefs.getString("role");
+  return storedRole ?? "";
+}
+
+FutureBuilder<String> bottomBar(BuildContext context, int currentIndex) {
+  return FutureBuilder<String>(
+    future: getRole(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.done) {
+        String role = snapshot.data ?? "";
+        bool coach = role.contains("Coach");
+        if (!coach && currentIndex > 1) {
+          currentIndex -= 1;
+        }
+        return BottomNavigationBar(
+          currentIndex: currentIndex,
+          onTap: (index) {
+            if (currentIndex != index) {
+              if (index == 0) {
+                Navigator.pushReplacementNamed(context, "/home");
+              } else if (index == 1) {
+                Navigator.pushReplacementNamed(
+                    context, coach ? "/repertoire" : "/calendar");
+              } else if (index == 2) {
+                Navigator.pushReplacementNamed(
+                    context, coach ? "/calendar" : "/profile");
+              } else if (coach && index == 3) {
+                Navigator.pushReplacementNamed(context, "/profile");
+              }
+            }
+          },
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.white,
+          iconSize: 30,
+          selectedItemColor: Colors.black,
+          unselectedItemColor: Colors.black45,
+          items: [
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Home",
+            ),
+            if (coach)
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.sports),
+                label: "Training",
+              ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_month),
+              label: "Calendar",
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle),
+              label: "Profile",
+            ),
+          ],
+        );
+      } else {
+        // Handle the loading state
+        return BottomNavigationBar(
+          items: const [
+            BottomNavigationBarItem(
+              icon: SizedBox.shrink(), // Invisible placeholder
+              label: "",
+            ),
+            BottomNavigationBarItem(
+              icon: SizedBox.shrink(), // Invisible placeholder
+              label: "",
+            ),
+          ],
+        );
       }
     },
-    type: BottomNavigationBarType.fixed,
-    backgroundColor: Colors.white,
-    iconSize: 30,
-    selectedItemColor: Colors.black,
-    unselectedItemColor: Colors.black45,
-    items: const [
-      BottomNavigationBarItem(
-        icon: Icon(Icons.home),
-        label: "Home",
-      ),
-      BottomNavigationBarItem(
-          icon: Icon(Icons.sports),
-          label: "Training"
-      ),
-      BottomNavigationBarItem(
-          icon: Icon(Icons.calendar_month),
-          label: "Calendar"
-      ),
-      BottomNavigationBarItem(
-          icon: Icon(Icons.account_circle),
-          label: "Profile"
-      ),
-    ],
   );
 }

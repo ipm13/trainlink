@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'image_widget.dart';
@@ -15,6 +16,35 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   File? image;
+
+  String? _user;
+  String? _email;
+  String? _phone;
+  String? _birthdate;
+  String? _gender;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  void _loadUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _user = prefs.getString('name')!;
+      _email = prefs.getString('email')!;
+      _phone = prefs.getString('phone')!;
+      _birthdate = prefs.getString('birthdate')!;
+      _gender = prefs.getString('gender')!;
+    });
+  }
+
+  int calculateAge() {
+    DateTime birthDate = DateFormat('dd MMMM yyyy').parse(_birthdate!);
+    Duration diff = DateTime.now().difference(birthDate);
+    return (diff.inDays / 365).floor();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +72,7 @@ class _ProfileState extends State<Profile> {
                           child: Column(
                             children: [
                               labelStyle("Age", size: 20.0, bold: true),
-                              labelStyle("24"),
+                              labelStyle(calculateAge().toString()),
                             ],
                           ),
                         ),
@@ -56,7 +86,7 @@ class _ProfileState extends State<Profile> {
                           child: Column(
                             children: [
                               labelStyle("Gender", size: 20.0, bold: true),
-                              labelStyle("Male"),
+                              labelStyle("$_gender"),
                             ],
                           ),
                         ),
@@ -64,7 +94,8 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                   const SizedBox(height: 20.0),
-                  labelStyle("João Lázaro", size: 24.0, bold: true),
+                  labelStyle("$_user", size: 24.0, bold: true),
+                  const SizedBox(height: 10.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -73,7 +104,7 @@ class _ProfileState extends State<Profile> {
                         color: Colors.white,
                       ),
                       const SizedBox(width: 6.0),
-                      labelStyle("lazaro0ntheroad@gmail.com"),
+                      labelStyle("$_email"),
                     ],
                   ),
                   const SizedBox(height: 6.0),
@@ -85,7 +116,7 @@ class _ProfileState extends State<Profile> {
                         color: Colors.white,
                       ),
                       const SizedBox(width: 6.0),
-                      labelStyle("911111111"),
+                      labelStyle("$_phone"),
                     ],
                   ),
                   const SizedBox(height: 6.0),
@@ -97,7 +128,7 @@ class _ProfileState extends State<Profile> {
                         color: Colors.white,
                       ),
                       const SizedBox(width: 6.0),
-                      labelStyle("24-04-1999"),
+                      labelStyle("$_birthdate"),
                     ],
                   ),
                 ],
@@ -129,7 +160,7 @@ class _ProfileState extends State<Profile> {
                 ],
               ),
             ),
-            const SizedBox(height: 120.0),
+            const SizedBox(height: 110.0),
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,

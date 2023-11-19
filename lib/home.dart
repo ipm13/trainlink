@@ -17,7 +17,7 @@ class _HomeState extends State<Home> {
 
   final codeController = TextEditingController();
 
-  String? _email;
+  String? _user;
 
   @override
   void initState() {
@@ -28,7 +28,7 @@ class _HomeState extends State<Home> {
   void _loadUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _email = prefs.getString('email')!;
+      _user = prefs.getString('name')!;
     });
   }
 
@@ -56,7 +56,7 @@ class _HomeState extends State<Home> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 20.0),
-              child: labelStyle("Hello, $_email"),
+              child: labelStyle("Hello, $_user"),
             ),
             labelStyle("My Teams", size: 24.0, bold: true),
             const CustomLine(),

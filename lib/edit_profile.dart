@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'image_widget.dart';
 import 'utils.dart';
@@ -19,7 +21,30 @@ class _EditProfileState extends State<EditProfile> {
   final birthDateController = TextEditingController();
   final mobilePhoneController = TextEditingController();
   String? selectedGenderValue;
+
   File? image;
+
+  SharedPreferences? prefs;
+  String? _user;
+  String? _gender;
+  String? _birthdate;
+  String? _phone;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  void _loadUser() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _user = prefs!.getString('name')!;
+      _gender = prefs!.getString('gender')!;
+      _birthdate = prefs!.getString('birthdate')!;
+      _phone = prefs!.getString('phone')!;
+    });
+  }
 
   @override
   void dispose() {
@@ -30,7 +55,24 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   bool validateFields() {
-    return true;
+    bool toReturn = false;
+    if (nameController.text.isNotEmpty && nameController.text != _user) {
+      prefs!.setString('name', nameController.text);
+      toReturn = true;
+    }
+    if (selectedGenderValue != null && selectedGenderValue!.isNotEmpty && selectedGenderValue != _gender) {
+      prefs!.setString('gender', selectedGenderValue!);
+      toReturn = true;
+    }
+    if (birthDateController.text.isNotEmpty && birthDateController.text != _birthdate) {
+      prefs!.setString('birthdate', birthDateController.text);
+      toReturn = true;
+    }
+    if (mobilePhoneController.text.isNotEmpty && mobilePhoneController.text != _phone) {
+      prefs!.setString('phone', mobilePhoneController.text);
+      toReturn = true;
+    }
+    return toReturn;
   }
 
   @override
@@ -74,10 +116,28 @@ class _EditProfileState extends State<EditProfile> {
                     },
                   ),
                   const SizedBox(height: 20.0),
-                  buildInputWithTitle(
-                    "Birthday",
-                    inputFieldDecoration("Enter a new birth date"),
-                    birthDateController,
+                  Row(
+                    children: [
+                      labelStyle(" Birth Date"),
+                    ],
+                  ),
+                  TextFormField(
+                    style: inputStyle(),
+                    controller: birthDateController,
+                    decoration: inputFieldDecoration("Enter a new birth date", prefixIcon: Icons.calendar_month),
+                    validator: (value) => value!.isNotEmpty ? null : "Please enter a birth date",
+                    readOnly: true,
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime(2000),
+                          firstDate: DateTime.now().subtract(const Duration(days: 100 * 365)),
+                          lastDate: DateTime.now()
+                      );
+                      if (pickedDate != null) {
+                        birthDateController.text = DateFormat('dd MMMM yyyy').format(pickedDate);
+                      }
+                    },
                   ),
                   const SizedBox(height: 20.0),
                   buildInputWithTitle(
@@ -91,13 +151,11 @@ class _EditProfileState extends State<EditProfile> {
                       onPressed: () {
                         if (validateFields()) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                              snackBarStyle(
-                                  "Successfully edited your profile"));
-                          Navigator.pop(context);
+                            snackBarStyle("Successfully edited your profile"));
+                          Navigator.pushReplacementNamed(context, '/profile');
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                              snackBarStyle("No changes detected",
-                                  warning: true));
+                            snackBarStyle("No changes detected", warning: true));
                         }
                       },
                       style: flatButtonStyle,

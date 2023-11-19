@@ -62,7 +62,7 @@ class _RegisterState extends State<Register> {
               autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                 children: [
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 90),
                   labelStyle("Profile Photo"),
                   const SizedBox(height: 8),
                   ImageWidget(

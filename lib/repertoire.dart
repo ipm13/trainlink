@@ -49,7 +49,7 @@ class _RepertoireState extends State<Repertoire> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   SizedBox(
-                    width: 250,
+                    width: 190,
                     child: ElevatedButton.icon(
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(

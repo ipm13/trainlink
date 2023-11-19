@@ -81,7 +81,7 @@ class Singleton {
   void addSchedule(String teamName, String trainingName, String location, String weekDay, int hours, int minutes) {
     schedules ??= HashMap();
     int id = schedules!.length + 1;
-    schedules![id] = Schedule(teamName, trainingName, location, weekDay, hours, minutes);
+    schedules![id] = Schedule(teamName, location, weekDay, hours, minutes, getTrainingByName(trainingName));
   }
 
   HashMap<int, Schedule>? getSchedules() {
@@ -125,6 +125,15 @@ class Singleton {
     return trainings?[id];
   }
 
+  Training? getTrainingByName(String name) {
+    for (final training in trainings!.values) {
+      if (training.name == name) {
+        return training;
+      }
+    }
+    return null;
+  }
+
   int? getTrainingCount() {
     return trainings?.length;
   }
@@ -146,11 +155,11 @@ class Training {
 }
 
 class Schedule {
-  final String teamName, trainingName, location, weekDay;
+  final String teamName, location, weekDay;
   final int hours, minutes;
+  final Training? training;
 
-  Schedule(this.teamName, this.trainingName, this.location, this.weekDay, this.hours, this
-  .minutes);
+  Schedule(this.teamName, this.location, this.weekDay, this.hours, this.minutes, this.training);
 }
 
 class Field {

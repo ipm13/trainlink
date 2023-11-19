@@ -223,13 +223,13 @@ class _ScheduleState extends State<Schedule> {
                               selectedTrainingValue!,
                               locationController.text,
                               selectedDOWValue!,
-                              selectedTODHValue as int,
-                              selectedTODMValue as int);
+                              int.parse(selectedTODHValue!),
+                              int.parse(selectedTODMValue!));
 
                           ScaffoldMessenger.of(context).showSnackBar(
                               snackBarStyle(
                                   "Successfully scheduled a training"));
-                          Navigator.pop(context);
+                          Navigator.pushReplacementNamed(context, "/calendar");
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                               snackBarStyle("Please fill out the fields",

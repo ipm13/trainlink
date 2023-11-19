@@ -45,24 +45,27 @@ class _CreateTrainState extends State<CreateTrain> {
       resizeToAvoidBottomInset: false,
       body: Container(
         decoration: backgroundDecoration(),
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 50.0),
-                child: Column(
-                  children: [
-                    buildInputWithTitle(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 25.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    child: buildInputWithTitle(
                       "Train Name *",
                       inputFieldDecoration("Enter your train name",
                           prefixIcon: Icons.badge_outlined),
                       nameController,
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    buildDropdownWithTitle(
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    child: buildDropdownWithTitle(
                       "Sport Modality *",
                       Text("Pick a modality", style: inputStyle()),
                       [
@@ -80,10 +83,12 @@ class _CreateTrainState extends State<CreateTrain> {
                         });
                       },
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    buildDropdownWithTitle(
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    child: buildDropdownWithTitle(
                       "Duration *",
                       Text("Pick train duration", style: inputStyle()),
                       ["30", "45", "60", "75", "90", "105", "120"],
@@ -94,90 +99,127 @@ class _CreateTrainState extends State<CreateTrain> {
                         });
                       },
                     ),
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  Container(
+                    width: 85,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                          BorderRadius.circular(10),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Fields:',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              child: SizedBox(
+                width: 300,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    SizedBox(
+                      height: 100,
+                      width: 250,
+                      child: ListView.builder(
+                        itemCount: trainingFields.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) => Center(
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 50,
+                                height: 50,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.green,
+                                ),
+                                child: Center(
+                                  child: Text("$index"),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.green,
+                      ),
+                      child: InkWell(
+                        onTap: () async {
+                          final result = await Navigator.of(context)
+                              .pushNamed('/createField');
+                          if (result != null && result is Field) {
+                            setState(() {
+                              trainingFields.add(result);
+                            });
+                          }
+                        },
+                        child: Container(
+                          width: 50,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.green,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 40,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              InkWell(
-                onTap: () async {
-                  final result =
-                      await Navigator.of(context).pushNamed('/createField');
-
-                  if (result != null && result is Field) {
-                    setState(() {
-                      trainingFields.add(result);
-                    });
-                  }
-                },
-                child: Container(
-                  width: 160,
-                  height: 160,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Fields",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                        ),
-                      ),
-                      SizedBox(height: 7),
-                      Icon(
-                        Icons.add,
-                        color: Colors.white,
-                        size: 40,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: trainingFields.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(trainingFields[index].name),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              ElevatedButton(
-                style: flatButtonStyle,
-                onPressed: () async {
-                  if (validateFields()) {
-                    Singleton().addTrain(
-                        nameController.text,
-                        selectedModalityValue!,
-                        int.parse(selectDurationValue!),
-                        trainingFields);
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) =>
-                          createTrainDialog(context, nameController.text),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(snackBarStyle(
-                        "Train name, modality and duration are required",
-                        warning: true));
-                  }
-                },
-                child: labelStyle("Create", size: 16.0),
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            ElevatedButton(
+              style: flatButtonStyle,
+              onPressed: () async {
+                if (validateFields()) {
+                  Singleton().addTrain(
+                      nameController.text,
+                      selectedModalityValue!,
+                      int.parse(selectDurationValue!),
+                      trainingFields);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) =>
+                        createTrainDialog(context, nameController.text),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(snackBarStyle(
+                      "Train name, modality and duration are required",
+                      warning: true));
+                }
+              },
+              child: labelStyle("Create", size: 16.0),
+            ),
+            const SizedBox(
+              height: 40,
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: SizedBox(

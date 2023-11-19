@@ -105,14 +105,51 @@ class _CreateTrainingState extends State<CreateTraining> {
                     height: 50,
                   ),
                   Container(
-                    width: 85,
-                    height: 50,
+                    width: 200,
+                    height: 80,
                     decoration: BoxDecoration(
                       //color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Center(
-                      child: labelStyle("Fields", bold: true)
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        labelStyle("Fields", bold: true),
+                        const SizedBox(
+                          height: 6,
+                        ),
+                        SizedBox(
+                          width: 180,
+                          child: ElevatedButton.icon(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<Color>(
+                                    const Color.fromRGBO(24, 231, 114, 1.0)
+                                )
+                            ),
+                            onPressed: () async {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      createFieldDialog(context)
+                              );
+                              //createFieldDialog(context);
+                              if (currentField != null) {
+                                setState(
+                                      () {
+                                    trainingFields.add(currentField!);
+                                    currentField = null;
+                                  },
+                                );
+                              }
+                            },
+                            icon: const Icon(
+                              Icons.add_circle_sharp,
+                              color: Colors.black54,
+                            ),
+                            label: buttonLabelStyle("Add a Field"),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -126,7 +163,7 @@ class _CreateTrainingState extends State<CreateTraining> {
                   children: [
                     SizedBox(
                       height: 100,
-                      width: 250,
+                      width: 300,
                       child: ListView.builder(
                         itemCount: trainingFields.length,
                         scrollDirection: Axis.horizontal,
@@ -144,45 +181,10 @@ class _CreateTrainingState extends State<CreateTraining> {
                                   child: Text("$index"),
                                 ),
                               ),
+                              const SizedBox(
+                                width: 6,
+                              ),
                             ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color.fromRGBO(24, 231, 114, 1.0),
-                      ),
-                      child: InkWell(
-                        onTap: () async {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>
-                                createFieldDialog(context)
-                          );
-                          //createFieldDialog(context);
-                          if (currentField != null) {
-                            setState(
-                              () {
-                                trainingFields.add(currentField!);
-                                currentField = null;
-                              },
-                            );
-                          }
-                        },
-                        child: Container(
-                          width: 50,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color.fromRGBO(24, 231, 114, 1.0),
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.add,
-                              color: Colors.black54,
-                              size: 40,
-                            ),
                           ),
                         ),
                       ),

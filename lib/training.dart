@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trainlink/main.dart';
 
-import 'image_widget.dart';
 import 'utils.dart';
 
 class Training extends StatefulWidget {

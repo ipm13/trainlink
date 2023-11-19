@@ -127,24 +127,4 @@ class _TeamState extends State<Team> {
   String getTeamModality() {
     return Singleton().getTeam(Singleton().teamId)!.modality;
   }
-
-  void showPopup(String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Tapped Icon"),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        );
-      },
-    );
-  }
 }

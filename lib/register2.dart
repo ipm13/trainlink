@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:trainlink/home.dart';
-import 'package:trainlink/route_generator.dart';
 
 import 'utils.dart';
 

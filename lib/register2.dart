@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trainlink/home.dart';
 
 import 'utils.dart';
@@ -26,6 +27,22 @@ class _Register2State extends State<Register2> {
     super.dispose();
   }
 
+  void _setUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setString('birthdate', birthDateController.text);
+      prefs.setString('gender', selectedGenderValue!);
+      prefs.setString('phone', mobilePhoneController.text);
+    });
+  }
+
+  bool validateGender() {
+    if (selectedGenderValue == null || selectedGenderValue!.isEmpty) {
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,14 +65,14 @@ class _Register2State extends State<Register2> {
                   children: [
                     Row(
                       children: [
-                        labelStyle(" Birth Date"),
+                        labelStyle(" Birth Date *"),
                       ],
                     ),
                     TextFormField(
                       style: inputStyle(),
                       controller: birthDateController,
-                      decoration:
-                        inputFieldDecoration("Enter your birth date", prefixIcon: Icons.calendar_month),
+                      decoration: inputFieldDecoration("Enter your birth date", prefixIcon: Icons.calendar_month),
+                      validator: (value) => value!.isNotEmpty ? null : "Please enter a birth date",
                       readOnly: true,
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
@@ -71,7 +88,7 @@ class _Register2State extends State<Register2> {
                     ),
                     const SizedBox(height: 8),
                     buildDropdownWithTitle(
-                      "Gender",
+                      "Gender *",
                       const Text("Choose your gender"),
                       ["Male", "Female", "Other"],
                       selectedGenderValue,
@@ -84,14 +101,14 @@ class _Register2State extends State<Register2> {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        labelStyle(" Mobile Phone"),
+                        labelStyle(" Mobile Phone *"),
                       ],
                     ),
                     TextFormField(
                       style: inputStyle(),
                       controller: mobilePhoneController,
-                      decoration:
-                        inputFieldDecoration("Enter your mobile phone", prefixIcon: Icons.phone),
+                      decoration: inputFieldDecoration("Enter your mobile phone", prefixIcon: Icons.phone),
+                      validator: (value) => value!.length == 9 ? null : "Please enter a 9-digit number",
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly
@@ -104,17 +121,29 @@ class _Register2State extends State<Register2> {
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
                                 const Color.fromRGBO(24, 231, 114, 1.0)
-                            )
+                            ),
                         ),
                         onPressed: () {
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(builder: (context) => const Home()),
-                            (route) => false,
-                          );
+                          if (_formKey.currentState!.validate()) {
+                            if (validateGender()) {
+                              _setUser();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                snackBarStyle("Account successfully created")
+                              );
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => const Home()), (route) => false,
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                snackBarStyle("Invalid credentials", warning: true)
+                              );
+                            }
+                          }
                         },
                         label: buttonLabelStyle("Register"),
                         icon: const Icon(
-                          Icons.add_circle,
+                          Icons.check_circle_rounded,
                           color: Colors.black54,
                         ),
                       ),

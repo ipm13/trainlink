@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -75,19 +76,19 @@ class _RegisterState extends State<Register> {
                       children: [
                         Row(
                           children: [
-                            labelStyle(" Name"),
+                            labelStyle(" Name *"),
                           ],
                         ),
                         TextFormField(
-                            style: inputStyle(),
-                            controller: nameController,
-                            decoration:
-                            inputFieldDecoration("Enter your name", prefixIcon: Icons.person)
+                          style: inputStyle(),
+                          controller: nameController,
+                          decoration: inputFieldDecoration("Enter your name", prefixIcon: Icons.person),
+                          validator: (value) => value!.length > 1 ? null : "Name is too short",
                         ),
                         const SizedBox(height: 8),
                         Row(
                           children: [
-                            labelStyle(" Email"),
+                            labelStyle(" Email *"),
                           ],
                         ),
                         TextFormField(
@@ -95,12 +96,12 @@ class _RegisterState extends State<Register> {
                           controller: emailController,
                           decoration:
                           inputFieldDecoration("Enter your email", prefixIcon: Icons.email),
-                          //validator: (value) => EmailValidator.validate(value!) ? null : "Please enter a valid email",
+                          validator: (value) => EmailValidator.validate(value!) ? null : "Email is not valid",
                         ),
                         const SizedBox(height: 8),
                         Row(
                           children: [
-                            labelStyle(" Password"),
+                            labelStyle(" Password *"),
                           ],
                         ),
                         TextFormField(
@@ -108,12 +109,12 @@ class _RegisterState extends State<Register> {
                           controller: passwordController,
                           obscureText: true,
                           decoration: inputFieldDecoration("Enter your password", prefixIcon: Icons.lock, suffixIcon: Icons.visibility_off),
-                          //validator: (val) => val!.length < 6 ? 'Password too short.' : null,
+                          validator: (value) => value!.length > 1 ? null : "Please enter a stronger password",
                         ),
                         const SizedBox(height: 8),
                         Row(
                           children: [
-                            labelStyle(" Confirm Password"),
+                            labelStyle(" Confirm Password *"),
                           ],
                         ),
                         TextFormField(
@@ -121,6 +122,7 @@ class _RegisterState extends State<Register> {
                           controller: confirmPasswordController,
                           obscureText: true,
                           decoration: inputFieldDecoration("Confirm your password", prefixIcon: Icons.lock, suffixIcon: Icons.visibility_off),
+                          validator: (value) => value! == passwordController.text ? null : "Password mismatch",
                         ),
                         const Padding(padding: EdgeInsets.only(bottom: 40)),
                         SizedBox(
@@ -132,8 +134,14 @@ class _RegisterState extends State<Register> {
                                 )
                             ),
                             onPressed: () {
-                              _setUser();
-                              Navigator.of(context).pushNamed('/register2');
+                              if (_formKey.currentState!.validate()) {
+                                _setUser();
+                                Navigator.of(context).pushNamed('/register2');
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  snackBarStyle("Invalid credentials", warning: true)
+                                );
+                              }
                             },
                             label: buttonLabelStyle("Next"),
                             icon: const Icon(

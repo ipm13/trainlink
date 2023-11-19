@@ -46,7 +46,7 @@ class _ChooseRoleState extends State<ChooseRole> {
                           padding: EdgeInsets.symmetric(vertical: 20),
                         ),
                         ClipRRect(
-                            child: Image.asset('assets/images/coach.png', width: 180, height: 180),
+                          child: Image.asset('assets/images/coach.png', width: 180, height: 180),
                         ),
                       ],
                     ),
@@ -67,7 +67,7 @@ class _ChooseRoleState extends State<ChooseRole> {
                           padding: EdgeInsets.symmetric(vertical: 20),
                         ),
                         ClipRRect(
-                            child: Image.asset('assets/images/player.png', width: 180, height: 180),
+                          child: Image.asset('assets/images/player.png', width: 180, height: 180),
                         ),
                       ],
                     ),

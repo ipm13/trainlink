@@ -41,16 +41,12 @@ class _ProfileState extends State<Profile> {
       _phone = prefs.getString('phone')!;
       _birthdate = prefs.getString('birthdate')!;
       _gender = prefs.getString('gender')!;
-      if (prefs.getString('role')! == "Coach") {
-        isCoach = true;
-      } else {
-        isCoach = false;
-      }
+      prefs.getString('role')! == "Coach" ? isCoach = true : isCoach = false;
     });
   }
 
   int calculateAge() {
-    print(_birthdate);
+    if (_birthdate == null) return 0;
     DateTime birthDate = DateFormat('dd MMMM yyyy').parse(_birthdate!);
     Duration diff = DateTime.now().difference(birthDate);
     return (diff.inDays / 365).floor();

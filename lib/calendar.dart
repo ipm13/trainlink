@@ -25,11 +25,17 @@ class _CalendarState extends State<Calendar> {
 
   bool isCoach = false;
 
-  Future<String> getRole() async {
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  void _loadUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? storedRole = prefs.getString("role");
-    storedRole == "Coach" ? isCoach = true : isCoach = false;
-    return storedRole ?? "";
+    setState(() {
+      prefs.getString('role')! == "Coach" ? isCoach = true : isCoach = false;
+    });
   }
 
   @override
@@ -38,108 +44,91 @@ class _CalendarState extends State<Calendar> {
     return Scaffold(
         body: Container(
           decoration: backgroundDecoration(),
-          child: FutureBuilder<String>(
-              future: getRole(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  // Assign the value to 'role' after the Future completes
-                  String role = snapshot.data ?? "";
-                  return Column(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                      ),
-                      const SizedBox(height: 40),
-                      labelStyle("My Calendar", size: 24.0, bold: true),
-                      Expanded(
-                        flex: 7,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          child: ListView.builder(
-                            itemCount: nextSevenDays.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Column(
-                                children: [
-                                  Text(
-                                    DateFormat('EEEE')
-                                        .format(nextSevenDays[index].toLocal()),
-                                    style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
-                                  ),
-                                  DayCard(
-                                    date: nextSevenDays[index],
-                                    role: role,
-                                  ),
-                                  if (index < nextSevenDays.length - 1)
-                                    const CustomLine(),
-                                ],
-                              );
-                            },
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+              ),
+              const SizedBox(height: 40),
+              labelStyle("My Calendar", size: 24.0, bold: true),
+              Expanded(
+                flex: 7,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: ListView.builder(
+                    itemCount: nextSevenDays.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Column(
+                        children: [
+                          Text(
+                            DateFormat('d/M - EEEE')
+                              .format(nextSevenDays[index].toLocal()),
+                            style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                           ),
+                          DayCard(
+                            date: nextSevenDays[index],
+                            role: isCoach ? "Coach" : "Player",
+                          ),
+                          if (index < nextSevenDays.length - 1)
+                            const CustomLine(),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: isCoach
+                      ? MainAxisAlignment.spaceAround
+                      : MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 180,
+                      child: ElevatedButton.icon(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(
+                                    const Color.fromRGBO(24, 231, 114, 1.0))),
+                        onPressed: () {
+                          Navigator.of(context).pushNamed("/monthlyView");
+                        },
+                        icon: const Icon(
+                          Icons.remove_red_eye,
+                          color: Colors.black54,
+                        ),
+                        label: buttonLabelStyle('Monthly View'),
+                      ),
+                    ),
+                    if (isCoach)
+                      SizedBox(
+                        width: 180,
+                        child: ElevatedButton.icon(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all<Color>(
+                                      const Color.fromRGBO(24, 231, 114, 1.0))),
+                          onPressed: () {
+                            Navigator.of(context).pushNamed('/schedule');
+                          },
+                          icon: const Icon(
+                            Icons.add_circle_sharp,
+                            color: Colors.black54,
+                          ),
+                          label: buttonLabelStyle('Schedule'),
                         ),
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                          mainAxisAlignment: isCoach
-                              ? MainAxisAlignment.spaceAround
-                              : MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 180,
-                              child: ElevatedButton.icon(
-                                style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            const Color.fromRGBO(
-                                                24, 231, 114, 1.0))),
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .pushNamed("/monthlyView");
-                                },
-                                icon: const Icon(
-                                  Icons.remove_red_eye,
-                                  color: Colors.black54,
-                                ),
-                                label: buttonLabelStyle('Monthly View'),
-                              ),
-                            ),
-                            if (role.contains("Coach"))
-                              SizedBox(
-                                width: 180,
-                                child: ElevatedButton.icon(
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              const Color.fromRGBO(
-                                                  24, 231, 114, 1.0))),
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pushNamed('/schedule');
-                                  },
-                                  icon: const Icon(
-                                    Icons.add_circle_sharp,
-                                    color: Colors.black54,
-                                  ),
-                                  label: buttonLabelStyle('Schedule'),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                } else {
-                  // Show a loading indicator while the Future is still running
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              }),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
-        bottomNavigationBar: isCoach ? bottomBarCoach(context, 1) : bottomBarPlayer(context, 1)
+        bottomNavigationBar: isCoach ? bottomBarCoach(context, 2) : bottomBarPlayer(context, 1)
     );
   }
 }
@@ -172,7 +161,10 @@ class _DayCardState extends State<DayCard> {
       minutes %= 60; // Set minutes to the remainder after dividing by 60
     }
 
-    return "$hours:$minutes";
+    String formattedHours = hours.toString().padLeft(2, '0');
+    String formattedMinutes = minutes.toString().padLeft(2, '0');
+
+    return "$formattedHours:$formattedMinutes";
   }
 
   @override
@@ -180,6 +172,8 @@ class _DayCardState extends State<DayCard> {
     List<ScheduleDTO> schedules = getDaySchedules();
     return Column(
       children: schedules.map((schedule) {
+        String formattedHours = schedule.hours.toString().padLeft(2, '0');
+        String formattedMinutes = schedule.minutes.toString().padLeft(2, '0');
         return GestureDetector(
           onTap: () {
             showPopup(
@@ -191,7 +185,10 @@ class _DayCardState extends State<DayCard> {
           },
           child: Center(
             child: Container(
-              color: Colors.white,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10), // Ajuste o valor conforme necessário
+              ),
               width: 0.8 * MediaQuery.of(context).size.width,
               padding: const EdgeInsets.all(16),
               margin: const EdgeInsets.symmetric(vertical: 8),
@@ -213,7 +210,7 @@ class _DayCardState extends State<DayCard> {
                         width: 5,
                       ),
                       Text(
-                        "${schedule.hours}:${schedule.minutes} - "
+                        "$formattedHours:$formattedMinutes - "
                             "${calculateFinalTime(schedule.hours, schedule.minutes)}",
                         textAlign: TextAlign.left,
                         style: const TextStyle(
@@ -250,6 +247,9 @@ class _DayCardState extends State<DayCard> {
 
   void showPopup(
       String teamName, int hours, int minutes, BuildContext context) {
+    String formattedHours = hours.toString().padLeft(2, '0');
+    String formattedMinutes = minutes.toString().padLeft(2, '0');
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -272,7 +272,7 @@ class _DayCardState extends State<DayCard> {
               Text(teamName, textAlign: TextAlign.center),
             ],
           ),
-          content: Text("$hours:$minutes - "
+          content: Text("$formattedHours:$formattedMinutes - "
               "${calculateFinalTime(hours, minutes)}", textAlign: TextAlign.center),
           actions: [
             Center(

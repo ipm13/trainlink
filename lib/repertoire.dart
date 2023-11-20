@@ -49,7 +49,6 @@ class _RepertoireState extends State<Repertoire> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   SizedBox(
-                    width: 190,
                     child: ElevatedButton.icon(
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
@@ -63,7 +62,7 @@ class _RepertoireState extends State<Repertoire> {
                         Icons.add_circle_sharp,
                         color: Colors.black54,
                       ),
-                      label: buttonLabelStyle("Create Training", size: 18),
+                      label: buttonLabelStyle("Create Training"),
                     ),
                   ),
                 ],

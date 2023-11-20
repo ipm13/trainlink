@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:trainlink/singleton.dart';
 
 import 'image_widget.dart';
-import 'main.dart';
 import 'utils.dart';
 
 class CreateTeam extends StatefulWidget {
@@ -112,7 +112,7 @@ class _TeamState extends State<CreateTeam> {
           ),
         ),
       ),
-      bottomNavigationBar: bottomBar(context, 0),
+      bottomNavigationBar: bottomBarCoach(context, 0),
     );
   }
 

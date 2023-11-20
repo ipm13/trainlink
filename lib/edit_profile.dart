@@ -29,6 +29,7 @@ class _EditProfileState extends State<EditProfile> {
   String? _gender;
   String? _birthdate;
   String? _phone;
+  bool isCoach = false;
 
   @override
   void initState() {
@@ -39,6 +40,7 @@ class _EditProfileState extends State<EditProfile> {
   void _loadUser() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
+      prefs!.getString('role') == "Coach" ? isCoach = true : isCoach = false;
       _user = prefs!.getString('name')!;
       _gender = prefs!.getString('gender')!;
       _birthdate = prefs!.getString('birthdate')!;
@@ -56,6 +58,7 @@ class _EditProfileState extends State<EditProfile> {
 
   bool validateFields() {
     bool toReturn = false;
+    prefs!.setString('photo', image?.path ?? "default");
     if (nameController.text.isNotEmpty && nameController.text != _user) {
       prefs!.setString('name', nameController.text);
       toReturn = true;
@@ -168,7 +171,7 @@ class _EditProfileState extends State<EditProfile> {
           ),
         ),
       ),
-      bottomNavigationBar: bottomBar(context, 3),
+        bottomNavigationBar: isCoach ? bottomBarCoach(context, 3) : bottomBarPlayer(context, 2)
     );
   }
 

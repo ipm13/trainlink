@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trainlink/singleton.dart';
 
-import 'main.dart';
 import 'utils.dart';
 import 'create_field.dart';
 
@@ -12,11 +12,11 @@ class CreateTraining extends StatefulWidget {
 }
 
 class _CreateTrainingState extends State<CreateTraining> {
-  Field? currentField;
+  FieldDTO? currentField;
   final nameController = TextEditingController();
   String? selectedModalityValue;
   String? selectDurationValue;
-  List<Field> trainingFields = [];
+  List<FieldDTO> trainingFields = [];
 
   @override
   void dispose() {
@@ -37,7 +37,7 @@ class _CreateTrainingState extends State<CreateTraining> {
     return true;
   }
 
-  void setCurrentField(Field field) {
+  void setCurrentField(FieldDTO field) {
     setState(() {
       currentField = field;
     });
@@ -225,7 +225,7 @@ class _CreateTrainingState extends State<CreateTraining> {
           ],
         ),
       ),
-      bottomNavigationBar: bottomBar(context, 1),
+      bottomNavigationBar: bottomBarCoach(context, 1),
     );
   }
 

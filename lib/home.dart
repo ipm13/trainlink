@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trainlink/singleton.dart';
 
 import 'image_widget.dart';
-import 'main.dart';
 import 'utils.dart';
 
 class Home extends StatefulWidget {
@@ -18,6 +18,7 @@ class _HomeState extends State<Home> {
   final codeController = TextEditingController();
 
   String? _user;
+  bool isCoach = false;
 
   @override
   void initState() {
@@ -29,6 +30,7 @@ class _HomeState extends State<Home> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _user = prefs.getString('name')!;
+      prefs.getString('role')! == "Coach" ? isCoach = true : isCoach = false;
     });
   }
 
@@ -82,7 +84,7 @@ class _HomeState extends State<Home> {
             Expanded(
               flex: 1,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: isCoach ? MainAxisAlignment.spaceAround : MainAxisAlignment.center,
                 children: [
                   SizedBox(
                     width: 180,
@@ -105,31 +107,33 @@ class _HomeState extends State<Home> {
                       label: buttonLabelStyle("Join Team"),
                     ),
                   ),
-                  SizedBox(
-                    width: 180,
-                    child: ElevatedButton.icon(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color.fromRGBO(24, 231, 114, 1.0)
-                        )
+                  isCoach ?
+                    SizedBox(
+                      width: 180,
+                      child: ElevatedButton.icon(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color.fromRGBO(24, 231, 114, 1.0)
+                          )
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/createTeam');
+                        },
+                        icon: const Icon(
+                          Icons.add_circle_sharp,
+                          color: Colors.black54,
+                        ),
+                        label: buttonLabelStyle("Create Team"),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pushNamed('/createTeam');
-                      },
-                      icon: const Icon(
-                        Icons.add_circle_sharp,
-                        color: Colors.black54,
-                      ),
-                      label: buttonLabelStyle("Create Team"),
-                    ),
-                  ),
+                    )
+                  : Container(),
                 ],
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: bottomBar(context, 0)
+      bottomNavigationBar: isCoach ? bottomBarCoach(context, 0) : bottomBarPlayer(context, 0)
     );
   }
 

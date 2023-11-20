@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:trainlink/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trainlink/singleton.dart';
 
 import 'image_widget.dart';
 import 'utils.dart';
@@ -13,6 +14,16 @@ class Team extends StatefulWidget {
 }
 
 class _TeamState extends State<Team> {
+
+  bool isCoach = false;
+
+  Future<String> getRole() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? storedRole = prefs.getString("role");
+    storedRole == "Coach" ? isCoach = true : isCoach = false;
+    return storedRole ?? "";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,7 +127,7 @@ class _TeamState extends State<Team> {
           ],
         ),
       ),
-      bottomNavigationBar: bottomBar(context, 0),
+      bottomNavigationBar: isCoach ? bottomBarCoach(context, 0) : bottomBarPlayer(context, 0)
     );
   }
 

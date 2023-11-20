@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
+import 'package:trainlink/singleton.dart';
 import 'utils.dart';
 
 class Repertoire extends StatefulWidget {
@@ -72,7 +72,7 @@ class _RepertoireState extends State<Repertoire> {
           ],
         ),
       ),
-      bottomNavigationBar: bottomBar(context, 1),
+      bottomNavigationBar: bottomBarCoach(context, 1),
     );
   }
   List<Widget> getTrains() {

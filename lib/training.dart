@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trainlink/main.dart';
+import 'package:trainlink/singleton.dart';
 
 import 'utils.dart';
 
@@ -73,7 +73,7 @@ class _TrainingState extends State<Training> {
           ],
         ),
       ),
-      bottomNavigationBar: bottomBar(context, 1),
+      bottomNavigationBar: bottomBarCoach(context, 1),
     );
   }
 
@@ -89,7 +89,7 @@ class _TrainingState extends State<Training> {
     return Singleton().getTraining(Singleton().trainingId)!.duration;
   }
 
-  List<Field> getTrainingFields() {
+  List<FieldDTO> getTrainingFields() {
     return Singleton().getTraining(Singleton().trainingId)!.fields;
   }
 
@@ -102,7 +102,7 @@ class _TrainingState extends State<Training> {
     if (getTrainingFields().isEmpty) {
       widgets.add(labelStyle("This train has no field added"));
     } else {
-      for (Field field in getTrainingFields()) {
+      for (FieldDTO field in getTrainingFields()) {
         String name = field.name;
         widgets.add(
           ElevatedButton(

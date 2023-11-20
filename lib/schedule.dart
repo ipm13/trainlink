@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trainlink/singleton.dart';
 import 'package:trainlink/utils.dart';
-
-import 'main.dart';
 
 class Schedule extends StatefulWidget {
   const Schedule({super.key});
@@ -246,7 +245,7 @@ class _ScheduleState extends State<Schedule> {
             ),
           ),
       ),
-      bottomNavigationBar: bottomBar(context, 2),
+      bottomNavigationBar: bottomBarCoach(context, 2),
     );
   }
 }

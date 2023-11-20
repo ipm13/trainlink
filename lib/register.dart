@@ -38,6 +38,7 @@ class _RegisterState extends State<Register> {
   void _setUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
+      prefs.setString('photo', image?.path ?? "default");
       prefs.setString('name', nameController.text);
       prefs.setString('email', emailController.text);
     });
@@ -62,7 +63,7 @@ class _RegisterState extends State<Register> {
               autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                 children: [
-                  const SizedBox(height: 90),
+                  const SizedBox(height: 60),
                   labelStyle("Profile Photo"),
                   const SizedBox(height: 8),
                   ImageWidget(

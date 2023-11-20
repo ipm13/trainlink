@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:trainlink/singleton.dart';
 
-import 'main.dart';
 import 'utils.dart';
 
 class CreateField extends StatefulWidget {
-  final Function(Field) onFieldCreated;
+  final Function(FieldDTO) onFieldCreated;
   const CreateField({super.key, required this.onFieldCreated});
 
   @override
@@ -90,7 +90,7 @@ class _CreateFieldState extends State<CreateField> {
           style: flatButtonStyle,
           onPressed: () async {
             if (validateFields()) {
-              Field createdField = Field(
+              FieldDTO createdField = FieldDTO(
                   nameController.text,
                   descriptionController.text.isNotEmpty ? descriptionController.text : "No description",
                   "field"

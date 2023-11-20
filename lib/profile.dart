@@ -18,6 +18,8 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   File? image;
 
+  bool isCoach = false;
+
   String? _user;
   String? _email;
   String? _phone;
@@ -33,15 +35,22 @@ class _ProfileState extends State<Profile> {
   void _loadUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
+      image = prefs.getString('photo') != "default" ? File(prefs.getString('photo')!) : null;
       _user = prefs.getString('name')!;
       _email = prefs.getString('email')!;
       _phone = prefs.getString('phone')!;
       _birthdate = prefs.getString('birthdate')!;
       _gender = prefs.getString('gender')!;
+      if (prefs.getString('role')! == "Coach") {
+        isCoach = true;
+      } else {
+        isCoach = false;
+      }
     });
   }
 
   int calculateAge() {
+    print(_birthdate);
     DateTime birthDate = DateFormat('dd MMMM yyyy').parse(_birthdate!);
     Duration diff = DateTime.now().difference(birthDate);
     return (diff.inDays / 365).floor();
@@ -59,7 +68,7 @@ class _ProfileState extends State<Profile> {
             ),
             const SizedBox(height: 40.0),
             labelStyle("My Profile", size: 24.0, bold: true),
-            const SizedBox(height: 100.0),
+            const SizedBox(height: 60.0),
             Container(
               padding: const EdgeInsets.only(top: 20.0),
               child: Column(
@@ -135,7 +144,7 @@ class _ProfileState extends State<Profile> {
                 ],
               ),
             ),
-            const SizedBox(height: 10.0),
+            const SizedBox(height: 40.0),
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -161,7 +170,7 @@ class _ProfileState extends State<Profile> {
                 ],
               ),
             ),
-            const SizedBox(height: 110.0),
+            const SizedBox(height: 20.0),
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -196,7 +205,7 @@ class _ProfileState extends State<Profile> {
           ],
         ),
       ),
-      bottomNavigationBar: bottomBar(context, 3),
+        bottomNavigationBar: isCoach ? bottomBarCoach(context, 3) : bottomBarPlayer(context, 2)
     );
   }
 

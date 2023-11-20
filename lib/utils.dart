@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -214,78 +216,75 @@ class CustomLine extends StatelessWidget {
 
 Future<String> getRole() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString('role', "Coach");
   String? storedRole = prefs.getString("role");
   return storedRole ?? "";
 }
 
-FutureBuilder<String> bottomBar(BuildContext context, int currentIndex) {
-  return FutureBuilder<String>(
-    future: getRole(),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.done) {
-        String role = snapshot.data ?? "";
-        bool coach = role.contains("Coach");
-        if (!coach && currentIndex > 1) {
-          currentIndex -= 1;
-        }
-        return BottomNavigationBar(
-          currentIndex: currentIndex,
-          onTap: (index) {
-            if (currentIndex != index) {
-              if (index == 0) {
-                Navigator.pushNamed(context, "/home");
-              } else if (index == 1) {
-                Navigator.pushNamed(
-                    context, coach ? "/repertoire" : "/calendar");
-              } else if (index == 2) {
-                Navigator.pushNamed(
-                    context, coach ? "/calendar" : "/profile");
-              } else if (coach && index == 3) {
-                Navigator.pushNamed(context, "/profile");
-              }
-            }
-          },
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.white,
-          iconSize: 30,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.black45,
-          items: [
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: "Home",
-            ),
-            if (coach)
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.sports),
-                label: "Training",
-              ),
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month),
-              label: "Calendar",
-            ),
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle),
-              label: "Profile",
-            ),
-          ],
-        );
-      } else {
-        // Handle the loading state
-        return BottomNavigationBar(
-          items: const [
-            BottomNavigationBarItem(
-              icon: SizedBox.shrink(), // Invisible placeholder
-              label: "",
-            ),
-            BottomNavigationBarItem(
-              icon: SizedBox.shrink(), // Invisible placeholder
-              label: "",
-            ),
-          ],
-        );
+BottomNavigationBar bottomBarCoach(BuildContext context, int currentIndex) {
+  return BottomNavigationBar(
+    currentIndex: currentIndex,
+    onTap: (index) => {
+      if (currentIndex != index) {
+        if(index == 0) Navigator.pushReplacementNamed(context, "/home"),
+        if(index == 1) Navigator.pushReplacementNamed(context, "/repertoire"),
+        if(index == 2) Navigator.pushReplacementNamed(context, "/calendar"),
+        if(index == 3) Navigator.pushReplacementNamed(context, "/profile")
       }
     },
+    type: BottomNavigationBarType.fixed,
+    backgroundColor: Colors.white,
+    iconSize: 30,
+    selectedItemColor: Colors.black,
+    unselectedItemColor: Colors.black45,
+    items: const [
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label: "Home",
+      ),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.sports),
+          label: "Training"
+      ),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.calendar_month),
+          label: "Calendar"
+      ),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.account_circle),
+          label: "Profile"
+      ),
+    ],
+  );
+}
+
+BottomNavigationBar bottomBarPlayer(BuildContext context, int currentIndex) {
+  return BottomNavigationBar(
+    currentIndex: currentIndex,
+    onTap: (index) => {
+      if (currentIndex != index) {
+        if(index == 0) Navigator.pushReplacementNamed(context, "/home"),
+        if(index == 1) Navigator.pushReplacementNamed(context, "/calendar"),
+        if(index == 2) Navigator.pushReplacementNamed(context, "/profile")
+      }
+    },
+    type: BottomNavigationBarType.fixed,
+    backgroundColor: Colors.white,
+    iconSize: 30,
+    selectedItemColor: Colors.black,
+    unselectedItemColor: Colors.black45,
+    items: const [
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label: "Home",
+      ),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.calendar_month),
+          label: "Calendar"
+      ),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.account_circle),
+          label: "Profile"
+      ),
+    ],
   );
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trainlink/singleton.dart';
 import 'package:trainlink/utils.dart';
 
-import 'main.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({super.key});
@@ -23,10 +23,12 @@ class _CalendarState extends State<Calendar> {
     return nextSevenDays;
   }
 
+  bool isCoach = false;
+
   Future<String> getRole() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('role', "Coach");
     String? storedRole = prefs.getString("role");
+    storedRole == "Coach" ? isCoach = true : isCoach = false;
     return storedRole ?? "";
   }
 
@@ -81,7 +83,7 @@ class _CalendarState extends State<Calendar> {
                       Expanded(
                         flex: 1,
                         child: Row(
-                          mainAxisAlignment: role.contains("Coach")
+                          mainAxisAlignment: isCoach
                               ? MainAxisAlignment.spaceAround
                               : MainAxisAlignment.center,
                           children: [
@@ -137,7 +139,8 @@ class _CalendarState extends State<Calendar> {
                 }
               }),
         ),
-        bottomNavigationBar: bottomBar(context, 2));
+        bottomNavigationBar: isCoach ? bottomBarCoach(context, 1) : bottomBarPlayer(context, 1)
+    );
   }
 }
 
@@ -154,7 +157,7 @@ class DayCard extends StatefulWidget {
 class _DayCardState extends State<DayCard> {
   final justificationController = TextEditingController();
 
-  List<Schedule> getDaySchedules() {
+  List<ScheduleDTO> getDaySchedules() {
     String weekDay = DateFormat('EEEE').format(widget.date.toLocal());
     return Singleton().getSchedulesByWeekDay(weekDay);
   }
@@ -174,7 +177,7 @@ class _DayCardState extends State<DayCard> {
 
   @override
   Widget build(BuildContext context) {
-    List<Schedule> schedules = getDaySchedules();
+    List<ScheduleDTO> schedules = getDaySchedules();
     return Column(
       children: schedules.map((schedule) {
         return GestureDetector(

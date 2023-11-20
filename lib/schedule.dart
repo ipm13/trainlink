@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trainlink/calendar.dart';
 import 'package:trainlink/singleton.dart';
 import 'package:trainlink/utils.dart';
 
@@ -229,7 +230,9 @@ class _ScheduleState extends State<Schedule> {
                           ScaffoldMessenger.of(context).showSnackBar(
                               snackBarStyle(
                                   "Successfully scheduled a training"));
-                          Navigator.pushReplacementNamed(context, "/calendar");
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (context) => const Calendar()), (route) => false,
+                          );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                               snackBarStyle("Please fill out the fields",

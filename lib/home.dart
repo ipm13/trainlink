@@ -232,13 +232,23 @@ class _HomeState extends State<Home> {
                             );
                           } else {
                             if (code == teamDefault.code) {
-                              Singleton().addTeam(teamDefault.name, teamDefault.modality, teamDefault.logoPath);
+                              if (Singleton().getTeams() != null && Singleton().getTeams()!.isNotEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    snackBarStyle("You already belong to this team", warning: true)
+                                );
+                              } else {
+                                Singleton().addTeam(teamDefault.name, teamDefault.modality, teamDefault.logoPath);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    snackBarStyle("Welcome to the team")
+                                );
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pushReplacementNamed('/home');
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  snackBarStyle("Team code is invalid", warning: true)
+                              );
                             }
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              snackBarStyle("Welcome to the team")
-                            );
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pushReplacementNamed('/home');
                           }
                         }
                       },

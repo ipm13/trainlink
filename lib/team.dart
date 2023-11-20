@@ -18,12 +18,17 @@ class Team extends StatefulWidget {
 class _TeamState extends State<Team> {
 
   bool isCoach = false;
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
 
-  Future<String> getRole() async {
+  void _loadUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? storedRole = prefs.getString("role");
-    storedRole == "Coach" ? isCoach = true : isCoach = false;
-    return storedRole ?? "";
+    setState(() {
+      prefs.getString('role')! == "Coach" ? isCoach = true : isCoach = false;
+    });
   }
 
   @override

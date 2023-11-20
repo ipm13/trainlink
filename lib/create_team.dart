@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:trainlink/singleton.dart';
 
+import 'home.dart';
 import 'image_widget.dart';
 import 'utils.dart';
 
@@ -95,6 +96,7 @@ class _TeamState extends State<CreateTeam> {
                         if (validateFields()) {
                           Singleton().addTeam(nameController.text, selectedModalityValue!, image?.path);
                           showDialog(
+                              barrierDismissible: false,
                               context: context,
                               builder: (BuildContext context) =>
                               createTeamDialog(context, Singleton().getTeam(1)!),
@@ -122,56 +124,70 @@ class _TeamState extends State<CreateTeam> {
       context,
       route: '/home',
       widgets: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 20.0),
-          child: labelStyle("${team.name} was created!", bold: true, black: true),
-        ),
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
+        WillPopScope(
+          onWillPop: () async {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const Home()), (route) => false,
+            );
+            return false;
+          },
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 20.0),
+                child: labelStyle("${team.name} was created!", bold: true, black: true),
+              ),
+              Column(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black54,
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
                       children: [
-                        labelStyle(team.code),
-                        IconButton(
-                          icon: const Image(
-                            image: AssetImage("assets/images/copy.png")
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black54,
+                            borderRadius: BorderRadius.circular(10.0),
                           ),
-                          onPressed: () async {
-                            Clipboard.setData(
-                                ClipboardData(text: team.code)
-                            ).then((_) {
-                              Navigator.of(context).pushReplacementNamed('/home');
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                snackBarStyle("Team code copied to clipboard")
-                              );
-                            });
-                          }
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                labelStyle(team.code),
+                                IconButton(
+                                    icon: const Image(
+                                        image: AssetImage("assets/images/copy.png")
+                                    ),
+                                    onPressed: () async {
+                                      Clipboard.setData(
+                                          ClipboardData(text: team.code)
+                                      ).then((_) {
+                                        Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute(builder: (context) => const Home()), (route) => false,
+                                        );
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                            snackBarStyle("Team code copied to clipboard")
+                                        );
+                                      });
+                                    }
+                                ),
+                              ]
+                          ),
                         ),
-                      ]
+                        const SizedBox(
+                          height: 15.0,
+                        ),
+                        infoStyle(
+                            "Copy this code and share it with other members to invite them to the team.",
+                            black: true
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(
-                    height: 15.0,
-                  ),
-                  infoStyle(
-                    "Copy this code and share it with other members to invite them to the team.",
-                    black: true
                   ),
                 ],
               ),
-            ),
-          ],
-        ),
-      ]
+            ],
+          )
+        )
+    ]
     );
   }
 

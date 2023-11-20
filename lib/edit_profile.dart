@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trainlink/profile.dart';
 
 import 'image_widget.dart';
 import 'utils.dart';
@@ -157,7 +158,9 @@ class _EditProfileState extends State<EditProfile> {
                         if (validateFields()) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             snackBarStyle("Successfully edited your profile"));
-                          Navigator.pushReplacementNamed(context, '/profile');
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (context) => const Profile()), (route) => false,
+                          );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             snackBarStyle("No changes detected", warning: true));

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trainlink/repertoire.dart';
 import 'package:trainlink/singleton.dart';
 
 import 'utils.dart';
@@ -165,7 +166,9 @@ class _CreateTrainingState extends State<CreateTraining> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     snackBarStyle("Training successfully created")
                   );
-                  Navigator.pushReplacementNamed(context, '/repertoire');
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => const Repertoire()), (route) => false,
+                  );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     snackBarStyle("Name, modality and duration required", warning: true)

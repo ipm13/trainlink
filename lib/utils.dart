@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'home.dart';
+
 Text labelStyle(String label,
     {double size = 18.0,
     bool bold = false,
@@ -127,7 +129,9 @@ AlertDialog popup(context, {String route = '', required List<Widget> widgets}) {
               child: GestureDetector(
                 onTap: () {
                   if (route.isNotEmpty) {
-                    Navigator.of(context).pushNamed(route);
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => const Home()), (route) => false,
+                    );
                   } else {
                     Navigator.of(context).pop();
                   }

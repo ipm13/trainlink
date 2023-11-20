@@ -31,6 +31,9 @@ dependencies:
   flutter:
     sdk: flutter
   image_picker: '^1.0.4'
+  image_gallery_saver: '2.0.3'
+  screenshot: '^2.1.0'
+  permission_handler: '^11.0.1'
   email_validator: '^2.1.16'
   flutter_launcher_icons: '^0.13.1'
   flutter_native_splash: '^2.2.4'
@@ -68,6 +71,7 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   assets:
+    - assets/images/field/
     - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see

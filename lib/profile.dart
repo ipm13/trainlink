@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'image_widget.dart';
+import 'login.dart';
 import 'utils.dart';
 
 class Profile extends StatefulWidget {
@@ -200,6 +201,9 @@ class _ProfileState extends State<Profile> {
   }
 
   void logout() {
-    Navigator.of(context).pushNamed('/login');
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const Login()),
+      (route) => false,
+    );
   }
 }

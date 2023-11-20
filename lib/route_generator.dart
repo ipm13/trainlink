@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trainlink/field.dart';
 import 'package:trainlink/register2.dart';
 import 'package:trainlink/schedule.dart';
 
@@ -47,6 +48,8 @@ class RouteGenerator
         return MaterialPageRoute(builder: (_) => const CreateTraining());
       case '/training':
         return MaterialPageRoute(builder: (_) => const Training());
+      case '/field':
+        return MaterialPageRoute(builder: (_) => const Field());
       case '/profile':
         return MaterialPageRoute(builder: (_) => const Profile());
       case '/editProfile':

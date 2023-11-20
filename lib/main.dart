@@ -8,17 +8,14 @@ import 'package:trainlink/route_generator.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   await Future.delayed(const Duration(seconds: 1));
   FlutterNativeSplash.remove();
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  var email = prefs.getString('email');
   //prefs.clear();
+  var email = prefs.getString('email');
 
   runApp(MyApp(initialRoute: email == null ? '/login' : '/home'));
 }

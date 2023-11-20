@@ -75,6 +75,20 @@ class _CreateFieldState extends State<CreateField> {
         ElevatedButton(
           style: flatButtonStyle,
           onPressed: () async {
+            Navigator.pushNamed(context, '/field');
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.edit),
+              labelStyle(" Prepare Field", size: 16.0),
+            ]
+          ),
+        ),
+        const SizedBox(height: 10),
+        ElevatedButton(
+          style: flatButtonStyle,
+          onPressed: () async {
             if (validateFields()) {
               Field createdField = Field(
                   nameController.text,

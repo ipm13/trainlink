@@ -63,7 +63,7 @@ class _RepertoireState extends State<Repertoire> {
                         Icons.add_circle_sharp,
                         color: Colors.black54,
                       ),
-                      label: buttonLabelStyle("Create Training"),
+                      label: buttonLabelStyle("Create Training", size: 18),
                     ),
                   ),
                 ],

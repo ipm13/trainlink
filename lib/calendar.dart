@@ -171,7 +171,7 @@ class _DayCardState extends State<DayCard> {
   Widget build(BuildContext context) {
     List<ScheduleDTO> schedules = getDaySchedules();
     return Column(
-      children: schedules.map((schedule) {
+      children: schedules.isEmpty ? [ const SizedBox(height: 10), const Text("No trainings scheduled", style: TextStyle(color: Colors.white),) ]: schedules.map((schedule) {
         String formattedHours = schedule.hours.toString().padLeft(2, '0');
         String formattedMinutes = schedule.minutes.toString().padLeft(2, '0');
         return GestureDetector(
@@ -187,7 +187,7 @@ class _DayCardState extends State<DayCard> {
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10), // Ajuste o valor conforme necessário
+                borderRadius: BorderRadius.circular(10),
               ),
               width: 0.8 * MediaQuery.of(context).size.width,
               padding: const EdgeInsets.all(16),

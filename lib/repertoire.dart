@@ -78,9 +78,6 @@ class _RepertoireState extends State<Repertoire> {
   List<Widget> getTrains() {
     List<Widget> widgets = [];
     if (Singleton().getTrainings()!.isEmpty) {
-      /*widgets.add(labelStyle("You have", size:25.0));
-      widgets.add(labelStyle("0",size:200.0, bold:true));
-      widgets.add(labelStyle("Train Plans", size:25.0));*/
       widgets.add(const SizedBox(height: 180));
       widgets.add(labelStyle("You have no training plans"));
       widgets.add(const SizedBox(height: 8));
@@ -91,7 +88,7 @@ class _RepertoireState extends State<Repertoire> {
         widgets.add(
           ElevatedButton(
             style: ButtonStyle(
-              fixedSize: MaterialStateProperty.all(const Size(175, 50)),
+              fixedSize: MaterialStateProperty.all(const Size(230, 50)),
               shape: MaterialStateProperty.all<OutlinedBorder>(
                 const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),

@@ -85,6 +85,9 @@ class _RegisterState extends State<Register> {
                           style: inputStyle(),
                           controller: nameController,
                           decoration: inputFieldDecoration("Enter your name", prefixIcon: Icons.person),
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(20),
+                          ],
                           validator: (value) => value!.length > 1 ? null : "Name is too short",
                         ),
                         const SizedBox(height: 8),

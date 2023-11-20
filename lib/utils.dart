@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Text labelStyle(String label,
@@ -20,10 +21,12 @@ Text labelStyle(String label,
       ));
 }
 
-Text buttonLabelStyle(String label, {double size = 16.0}) {
+Text buttonLabelStyle(String label, {double size = 16.0, bool white = false}) {
   return Text(label,
       style: TextStyle(
-        color: Colors.black54,
+        color: white
+            ? Colors.white
+            : Colors.black54,
         fontSize: size,
         fontWeight: FontWeight.bold,
       ));
@@ -139,10 +142,13 @@ AlertDialog popup(context, {String route = '', required List<Widget> widgets}) {
                 ),
               ),
             ),
+            const SizedBox(
+              height: 50,
+            ),
             Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: widgets,
+              children: widgets
             ),
           ],
         ),
@@ -153,7 +159,7 @@ AlertDialog popup(context, {String route = '', required List<Widget> widgets}) {
 
 Widget buildInputWithTitle(String title, InputDecoration inputDecoration,
     TextEditingController tController,
-    {bool black = false}) {
+    {bool black = false, int charLimit = 60}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -162,6 +168,9 @@ Widget buildInputWithTitle(String title, InputDecoration inputDecoration,
         style: inputStyle(),
         controller: tController,
         decoration: inputDecoration,
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(charLimit),
+        ],
       ),
     ],
   );

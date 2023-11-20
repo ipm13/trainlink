@@ -71,7 +71,7 @@ class _EditProfileState extends State<EditProfile> {
       prefs!.setString('birthdate', birthDateController.text);
       toReturn = true;
     }
-    if (mobilePhoneController.text.isNotEmpty && mobilePhoneController.text != _phone) {
+    if (mobilePhoneController.text.isNotEmpty && mobilePhoneController.text.length == 9 && mobilePhoneController.text != _phone) {
       prefs!.setString('phone', mobilePhoneController.text);
       toReturn = true;
     }
@@ -103,8 +103,9 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                   buildInputWithTitle(
                     "Name",
-                    inputFieldDecoration("Enter a new name"),
+                    inputFieldDecoration("Enter a new name", prefixIcon: Icons.person),
                     nameController,
+                    charLimit: 20,
                   ),
                   const SizedBox(height: 20.0),
                   buildDropdownWithTitle(
@@ -145,8 +146,9 @@ class _EditProfileState extends State<EditProfile> {
                   const SizedBox(height: 20.0),
                   buildInputWithTitle(
                     "Mobile Phone",
-                    inputFieldDecoration("Enter a new phone number"),
+                    inputFieldDecoration("Enter a new phone number", prefixIcon: Icons.phone),
                     mobilePhoneController,
+                    charLimit: 9,
                   ),
                   const SizedBox(height: 40.0),
                   Center(

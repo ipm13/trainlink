@@ -70,37 +70,48 @@ class _CreateFieldState extends State<CreateField> {
           ),
         ),
         const SizedBox(
-          height: 20,
+          height: 5,
         ),
-        ElevatedButton(
-          style: flatButtonStyle,
-          onPressed: () async {
-            Navigator.pushNamed(context, '/field');
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.edit),
-              labelStyle(" Prepare Field", size: 16.0),
-            ]
+        SizedBox(
+          width: 180,
+          child: ElevatedButton.icon(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                const Color.fromRGBO(50, 49, 103, 0.0)
+              )
+            ),
+            onPressed: () async {
+              Navigator.pushNamed(context, '/field');
+            },
+            icon: const Icon(
+              Icons.edit_location_alt_rounded,
+              color: Colors.white,
+            ),
+            label: buttonLabelStyle("Prepare Field", white: true),
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(
+          height: 25
+        ),
         ElevatedButton(
           style: flatButtonStyle,
           onPressed: () async {
             if (validateFields()) {
-              FieldDTO createdField = FieldDTO(
-                  nameController.text,
-                  descriptionController.text.isNotEmpty ? descriptionController.text : "No description",
-                  "field"
+              FieldDTO field = FieldDTO(
+                nameController.text,
+                descriptionController.text.isNotEmpty ? descriptionController.text : "No description",
+                "field"
               );
-              widget.onFieldCreated(createdField);
-              Navigator.pop(context, createdField);
+              widget.onFieldCreated(field);
+              ScaffoldMessenger.of(context).showSnackBar(
+                  snackBarStyle("Field successfully created")
+              );
+              Navigator.pop(context, field);
+              //Navigator.pushReplacementNamed(context, '/createTraining');
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(snackBarStyle(
-                  "Field name is required",
-                  warning: true));
+              ScaffoldMessenger.of(context).showSnackBar(
+                snackBarStyle("Field name is required", warning: true)
+              );
             }
           },
           child: labelStyle("Create", size: 16.0),

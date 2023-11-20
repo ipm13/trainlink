@@ -67,6 +67,7 @@ class _TeamState extends State<CreateTeam> {
                       "Team Name *",
                       inputFieldDecoration("Enter your team name", prefixIcon: Icons.badge_outlined),
                       nameController,
+                      charLimit: 20,
                     ),
                     const SizedBox(
                       height: 20,

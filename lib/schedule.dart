@@ -128,6 +128,7 @@ class _ScheduleState extends State<Schedule> {
                     "Location *",
                     inputFieldDecoration("Enter a location"),
                     locationController,
+                    charLimit: 30,
                   ),
 
                   // Vertical space

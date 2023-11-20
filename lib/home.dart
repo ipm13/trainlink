@@ -154,7 +154,7 @@ class _HomeState extends State<Home> {
         widgets.add(
           ElevatedButton(
             style: ButtonStyle(
-              fixedSize: MaterialStateProperty.all(const Size(175, 90)),
+              fixedSize: MaterialStateProperty.all(const Size(230, 90)),
               shape: MaterialStateProperty.all<OutlinedBorder>(
                 const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),

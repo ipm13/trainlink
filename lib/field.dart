@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:trainlink/singleton.dart';
 import 'package:trainlink/utils.dart';
 
 class Field extends StatefulWidget {
@@ -85,7 +86,7 @@ class _FieldState extends State<Field> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(14),
-                        child: Image.asset('assets/images/field/soccer.png', scale: 0.7),
+                        child: Image.asset('assets/images/field/${Singleton().modality.toLowerCase()}.png', scale: 0.7),
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +101,7 @@ class _FieldState extends State<Field> {
                           const SizedBox(height: 20),
                           Row(
                             children: [
-                              _createDraggable('assets/images/field/soccer-ball.png'),
+                              _createDraggable('assets/images/field/${Singleton().modality.toLowerCase()}-ball.png'),
                               const Text("  Ball", style: TextStyle(color: Colors.white))
                             ],
                           ),

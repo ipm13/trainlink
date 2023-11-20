@@ -1,5 +1,7 @@
 import 'dart:collection';
 
+import 'package:intl/intl.dart';
+
 class Singleton {
   // Accessible instance
   static final Singleton _instance = Singleton._internal();
@@ -7,15 +9,30 @@ class Singleton {
   Singleton._internal();
   factory Singleton() => _instance;
 
+  // Users
+
+  HashMap<int, UserDTO>? users = HashMap();
+  int? userId;
+
+  void createUser(UserDTO user) {
+    users ??= HashMap();
+    int id = users!.length + 1;
+    users![id] = user;
+  }
+
+  UserDTO? getUser(int? id) {
+    return users?[id];
+  }
+
   // Teams
 
   HashMap<int, TeamDTO>? teams = HashMap();
   int? teamId;
 
-  void addTeam(String name, String modality) {
+  void addTeam(String name, String modality, String? logoPath) {
     teams ??= HashMap();
     int id = teams!.length + 1;
-    teams![id] = TeamDTO(name, modality);
+    teams![id] = TeamDTO("7b640ac5-ea97-45d$id", name, modality, logoPath);
   }
 
   HashMap<int, TeamDTO>? getTeams() {
@@ -94,13 +111,22 @@ class Singleton {
   int? getTrainingCount() {
     return trainings?.length;
   }
-
-
 }
 
+UserDTO coachDefault = UserDTO("João Lázaro", "joao@gmail.com", "Password1@", DateFormat('dd MMMM yyyy').format(DateTime(1980)), "Male", "987654321", "Coach");
+UserDTO playerDefault = UserDTO("Leandro Santos", "leandro@gmail.com", "Password1@", DateFormat('dd MMMM yyyy').format(DateTime(2000)), "Male", "912345678", "Player");
+
+class UserDTO {
+  final String name, email, password, birthDate, gender, mobilePhone, role;
+  UserDTO(this.name, this.email, this.password, this.birthDate, this.gender, this.mobilePhone, this.role);
+}
+
+TeamDTO teamDefault = TeamDTO("7b640ac5-ea97-45d0", "BestFC", "Soccer", "default");
+
 class TeamDTO {
-  final String name, modality;
-  TeamDTO(this.name, this.modality);
+  final String code, name, modality;
+  final String? logoPath;
+  TeamDTO(this.code, this.name, this.modality, this.logoPath);
 }
 
 class TrainingDTO {

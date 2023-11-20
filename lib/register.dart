@@ -41,6 +41,7 @@ class _RegisterState extends State<Register> {
       prefs.setString('photo', image?.path ?? "default");
       prefs.setString('name', nameController.text);
       prefs.setString('email', emailController.text);
+      prefs.setString('password', passwordController.text);
     });
   }
 

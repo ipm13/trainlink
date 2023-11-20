@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trainlink/singleton.dart';
@@ -169,8 +171,8 @@ class _HomeState extends State<Home> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const ImageWidget(
-                  image: null,
+                ImageWidget(
+                  image: team.logoPath != null ? File(team.logoPath!) : null,
                   defaultImagePath: 'assets/images/gallery.png',
                   size: 40,
                 ),

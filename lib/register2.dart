@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trainlink/home.dart';
+import 'package:trainlink/singleton.dart';
 
 import 'utils.dart';
 
@@ -20,6 +21,8 @@ class _Register2State extends State<Register2> {
   final mobilePhoneController = TextEditingController();
   String? selectedGenderValue;
 
+  UserDTO? user;
+
   @override
   void dispose() {
     birthDateController.dispose();
@@ -34,6 +37,19 @@ class _Register2State extends State<Register2> {
       prefs.setString('gender', selectedGenderValue!);
       prefs.setString('phone', mobilePhoneController.text);
     });
+  }
+
+  void _getUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    user = UserDTO(
+        prefs.getString('name')!,
+        prefs.getString('email')!,
+        prefs.getString('password')!,
+        prefs.getString('birthdate')!,
+        prefs.getString('gender')!,
+        prefs.getString('mobilePhone')!,
+        prefs.getString('role')!
+    );
   }
 
   bool validateGender() {
@@ -127,6 +143,8 @@ class _Register2State extends State<Register2> {
                           if (_formKey.currentState!.validate()) {
                             if (validateGender()) {
                               _setUser();
+                              _getUser();
+                              user != null ? Singleton().createUser(user!) : null;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 snackBarStyle("Account successfully created")
                               );

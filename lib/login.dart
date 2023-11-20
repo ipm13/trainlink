@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trainlink/singleton.dart';
 
 import 'home.dart';
 import 'utils.dart';
@@ -14,10 +15,31 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
 
-  void _setUser() async {
+  void _setPlayer() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
+      prefs.setString('photo', "default");
+      prefs.setString('name', playerDefault.name);
       prefs.setString('email', emailController.text);
+      prefs.setString('password', passwordController.text);
+      prefs.setString('birthdate', playerDefault.birthDate);
+      prefs.setString('gender', playerDefault.gender);
+      prefs.setString('phone', playerDefault.mobilePhone);
+      prefs.setString('role', playerDefault.role);
+    });
+  }
+
+  void _setCoach() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setString('photo', "default");
+      prefs.setString('name', coachDefault.name);
+      prefs.setString('email', emailController.text);
+      prefs.setString('password', passwordController.text);
+      prefs.setString('birthdate', coachDefault.birthDate);
+      prefs.setString('gender', coachDefault.gender);
+      prefs.setString('phone', coachDefault.mobilePhone);
+      prefs.setString('role', coachDefault.role);
     });
   }
 
@@ -95,10 +117,23 @@ class _LoginState extends State<Login> {
                       style: flatButtonStyle,
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          _setUser();
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(builder: (context) => const Home()), (route) => false,
-                          );
+                          if (playerDefault.email == emailController.text && playerDefault.password == passwordController.text) {
+                            _setPlayer();
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(builder: (context) => const Home()), (route) => false,
+                            );
+                          } else {
+                            if (coachDefault.email == emailController.text && coachDefault.password == passwordController.text) {
+                              _setCoach();
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(builder: (context) => const Home()), (route) => false,
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  snackBarStyle("Invalid login credentials", warning: true)
+                              );
+                            }
+                          }
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             snackBarStyle("Invalid login credentials", warning: true)

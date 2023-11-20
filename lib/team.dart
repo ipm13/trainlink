@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,6 +28,7 @@ class _TeamState extends State<Team> {
 
   @override
   Widget build(BuildContext context) {
+    var team = getTeam();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Team Menu'),
@@ -43,15 +46,13 @@ class _TeamState extends State<Team> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const ImageWidget(
-                    image: null,
+                  ImageWidget(
+                    image: team.logoPath != null ? File(team.logoPath!) : null,
                     defaultImagePath: 'assets/images/gallery.png',
                     size: 80,
                   ),
-                  const SizedBox(
-                    height: 6,
-                  ),
-                  labelStyle(getTeamName(), size: 22.0),
+                  const SizedBox(height: 6),
+                  labelStyle(team.name, size: 22.0),
                 ],
               ),
             ),
@@ -71,14 +72,14 @@ class _TeamState extends State<Team> {
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          labelStyle("7b640ac5-ea97-45d0"),
+                          labelStyle(team.code),
                           IconButton(
                               icon: const Image(
                                   image: AssetImage("assets/images/copy.png")
                               ),
                               onPressed: () async {
                                 Clipboard.setData(
-                                    const ClipboardData(text: "7b640ac5-ea97-45d0")
+                                    ClipboardData(text: team.code)
                                 ).then((_) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       snackBarStyle("Team code copied to clipboard")
@@ -99,7 +100,7 @@ class _TeamState extends State<Team> {
             const SizedBox(
                 height: 6,
             ),
-            labelStyle(getTeamModality()),
+            labelStyle(team.modality),
             const SizedBox(
               height: 20,
             ),
@@ -131,11 +132,7 @@ class _TeamState extends State<Team> {
     );
   }
 
-  String getTeamName() {
-    return Singleton().getTeam(Singleton().teamId)!.name;
-  }
-
-  String getTeamModality() {
-    return Singleton().getTeam(Singleton().teamId)!.modality;
+  TeamDTO getTeam() {
+    return Singleton().getTeam(Singleton().teamId)!;
   }
 }

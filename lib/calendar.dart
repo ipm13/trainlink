@@ -64,7 +64,7 @@ class _CalendarState extends State<Calendar> {
                             DateFormat('d/M - EEEE')
                               .format(nextSevenDays[index].toLocal()),
                             style: const TextStyle(
-                            fontSize: 20,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.white),
                           ),

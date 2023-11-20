@@ -93,11 +93,11 @@ class _TeamState extends State<CreateTeam> {
                       style: flatButtonStyle,
                       onPressed: () async {
                         if (validateFields()) {
-                          Singleton().addTeam(nameController.text, selectedModalityValue!);
+                          Singleton().addTeam(nameController.text, selectedModalityValue!, image?.path);
                           showDialog(
                               context: context,
                               builder: (BuildContext context) =>
-                              createTeamDialog(context, nameController.text),
+                              createTeamDialog(context, Singleton().getTeam(1)!),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -117,14 +117,14 @@ class _TeamState extends State<CreateTeam> {
     );
   }
 
-  Widget createTeamDialog(BuildContext context, String teamName) {
+  Widget createTeamDialog(BuildContext context, TeamDTO team) {
     return popup(
       context,
       route: '/home',
       widgets: [
         Padding(
           padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 20.0),
-          child: labelStyle("$teamName was created!", bold: true, black: true),
+          child: labelStyle("${team.name} was created!", bold: true, black: true),
         ),
         Column(
           children: [
@@ -140,14 +140,14 @@ class _TeamState extends State<CreateTeam> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        labelStyle("7b640ac5-ea97-45d0"),
+                        labelStyle(team.code),
                         IconButton(
                           icon: const Image(
                             image: AssetImage("assets/images/copy.png")
                           ),
                           onPressed: () async {
                             Clipboard.setData(
-                                const ClipboardData(text: "7b640ac5-ea97-45d0")
+                                ClipboardData(text: team.code)
                             ).then((_) {
                               Navigator.of(context).pushReplacementNamed('/home');
                               ScaffoldMessenger.of(context).showSnackBar(

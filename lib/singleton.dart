@@ -80,6 +80,8 @@ class Singleton {
     return schedules?.length;
   }
 
+  String modality = "Soccer";
+
   // Trainings
 
   HashMap<int, TrainingDTO>? trainings = HashMap();
@@ -121,7 +123,7 @@ class UserDTO {
   UserDTO(this.name, this.email, this.password, this.birthDate, this.gender, this.mobilePhone, this.role);
 }
 
-TeamDTO teamDefault = TeamDTO("7b640ac5-ea97-45d0", "BestFC", "Soccer", "default");
+TeamDTO teamDefault = TeamDTO("7b640ac5-ea97-45d0", "Best FC", "Soccer", null);
 
 class TeamDTO {
   final String code, name, modality;

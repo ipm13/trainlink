@@ -231,12 +231,14 @@ class _HomeState extends State<Home> {
                               snackBarStyle("Team code is required", warning: true)
                             );
                           } else {
-                            // TODO
-                            // Add a team by code
+                            if (code == teamDefault.code) {
+                              Singleton().addTeam(teamDefault.name, teamDefault.modality, teamDefault.logoPath);
+                            }
                             ScaffoldMessenger.of(context).showSnackBar(
                               snackBarStyle("Welcome to the team")
                             );
                             Navigator.of(context).pop();
+                            Navigator.of(context).pushReplacementNamed('/home');
                           }
                         }
                       },

@@ -61,7 +61,7 @@ class _CreateTrainingState extends State<CreateTraining> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   const SizedBox(
-                    height: 90,
+                    height: 50,
                   ),
                   Container(
                     child: buildInputWithTitle(
@@ -83,6 +83,7 @@ class _CreateTrainingState extends State<CreateTraining> {
                       (String? selectedValue) {
                         setState(() {
                           selectedModalityValue = selectedValue;
+                          if (selectedValue != null) Singleton().modality = selectedValue;
                         });
                       },
                     ),
@@ -112,7 +113,8 @@ class _CreateTrainingState extends State<CreateTraining> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Column(
+                    child: selectedModalityValue != null ?
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         labelStyle(getFieldsAsString(), bold: true),
@@ -142,7 +144,7 @@ class _CreateTrainingState extends State<CreateTraining> {
                           ),
                         ),
                       ],
-                    ),
+                    ) : Container(),
                   ),
                 ],
               ),

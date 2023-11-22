@@ -151,18 +151,22 @@ class _DayCardState extends State<DayCard> {
     return Singleton().getSchedulesByWeekDay(weekDay);
   }
 
-  String calculateFinalTime(int hours, int minutes){
-    // Add 60 minutes
-    minutes += 60;
+  String calculateFinalTime(int hours, int minutes, String trainingName){
+    int? duration = Singleton().getTrainingByName(trainingName)?.duration;
+    if (duration == null) return "";
+
+    // Add duration minutes
+    int mins = minutes + duration;
+    int hrs = hours;
 
     // Check if adding 60 minutes causes an overflow to the next hour
-    if (minutes >= 60) {
-      hours += minutes ~/ 60; // Add the overflowed hours
-      minutes %= 60; // Set minutes to the remainder after dividing by 60
+    if (mins >= 60) {
+      hrs += mins ~/ 60; // Add the overflowed hours
+      mins %= 60; // Set minutes to the remainder after dividing by 60
     }
 
-    String formattedHours = hours.toString().padLeft(2, '0');
-    String formattedMinutes = minutes.toString().padLeft(2, '0');
+    String formattedHours = hrs.toString().padLeft(2, '0');
+    String formattedMinutes = mins.toString().padLeft(2, '0');
 
     return "$formattedHours:$formattedMinutes";
   }
@@ -177,9 +181,7 @@ class _DayCardState extends State<DayCard> {
         return GestureDetector(
           onTap: () {
             showPopup(
-              schedule.teamName,
-              schedule.hours,
-              schedule.minutes,
+              schedule,
               context,
             );
           },
@@ -211,7 +213,7 @@ class _DayCardState extends State<DayCard> {
                       ),
                       Text(
                         "$formattedHours:$formattedMinutes - "
-                            "${calculateFinalTime(schedule.hours, schedule.minutes)}",
+                            "${calculateFinalTime(schedule.hours, schedule.minutes, schedule.training?.name ?? "")}",
                         textAlign: TextAlign.left,
                         style: const TextStyle(
                           fontSize: 16,
@@ -246,9 +248,9 @@ class _DayCardState extends State<DayCard> {
   }
 
   void showPopup(
-      String teamName, int hours, int minutes, BuildContext context) {
-    String formattedHours = hours.toString().padLeft(2, '0');
-    String formattedMinutes = minutes.toString().padLeft(2, '0');
+      ScheduleDTO schedule, BuildContext context) {
+    String formattedHours = schedule.hours.toString().padLeft(2, '0');
+    String formattedMinutes = schedule.minutes.toString().padLeft(2, '0');
 
     showDialog(
       context: context,
@@ -269,11 +271,11 @@ class _DayCardState extends State<DayCard> {
                   ),
                 ],
               ),
-              Text(teamName, textAlign: TextAlign.center),
+              Text(schedule.teamName, textAlign: TextAlign.center),
             ],
           ),
           content: Text("$formattedHours:$formattedMinutes - "
-              "${calculateFinalTime(hours, minutes)}", textAlign: TextAlign.center),
+              "${calculateFinalTime(schedule.hours, schedule.minutes, schedule.training?.name ?? "")}", textAlign: TextAlign.center),
           actions: [
             Center(
               child: Column(

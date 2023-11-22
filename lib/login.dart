@@ -15,6 +15,20 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
 
+  void _setUser(UserDTO user) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setString('photo', user.photo);
+      prefs.setString('name', user.name);
+      prefs.setString('email', emailController.text);
+      prefs.setString('password', passwordController.text);
+      prefs.setString('birthdate', user.birthDate);
+      prefs.setString('gender', user.gender);
+      prefs.setString('phone', user.mobilePhone);
+      prefs.setString('role', user.role);
+    });
+  }
+
   void _setPlayer() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -117,21 +131,36 @@ class _LoginState extends State<Login> {
                       style: flatButtonStyle,
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          if (playerDefault.email == emailController.text && playerDefault.password == passwordController.text) {
-                            _setPlayer();
+                          var user = Singleton().getUserByEmail(emailController.text);
+                          if (user != null && user.password == passwordController.text) {
+                            _setUser(user);
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(builder: (context) => const Home()), (route) => false,
                             );
                           } else {
-                            if (coachDefault.email == emailController.text && coachDefault.password == passwordController.text) {
-                              _setCoach();
+                            if (playerDefault.email == emailController.text &&
+                                playerDefault.password ==
+                                    passwordController.text) {
+                              _setPlayer();
                               Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(builder: (context) => const Home()), (route) => false,
+                                MaterialPageRoute(
+                                    builder: (context) => const Home()), (
+                                  route) => false,
                               );
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  snackBarStyle("Invalid login credentials", warning: true)
-                              );
+                              if (coachDefault.email == emailController.text &&
+                                  coachDefault.password ==
+                                      passwordController.text) {
+                                _setCoach();
+                                Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) => const Home()), (route) => false,
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    snackBarStyle("Invalid login credentials", warning: true)
+                                );
+                              }
                             }
                           }
                         } else {

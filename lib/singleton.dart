@@ -24,6 +24,10 @@ class Singleton {
     return users?[id];
   }
 
+  UserDTO? getUserByEmail(String email) {
+    return users?.values.firstWhere((user) => user.email == email);
+  }
+
   // Teams
 
   HashMap<int, TeamDTO>? teams = HashMap();
@@ -115,12 +119,12 @@ class Singleton {
   }
 }
 
-UserDTO coachDefault = UserDTO("João Lázaro", "joao@gmail.com", "Password1@", DateFormat('dd MMMM yyyy').format(DateTime(1980)), "Male", "987654321", "Coach");
-UserDTO playerDefault = UserDTO("Leandro Santos", "leandro@gmail.com", "Password1@", DateFormat('dd MMMM yyyy').format(DateTime(2000)), "Male", "912345678", "Player");
+UserDTO coachDefault = UserDTO("João Lázaro", "joao@gmail.com", "Password1@", DateFormat('dd MMMM yyyy').format(DateTime(1980)), "Male", "987654321", "Coach", "default");
+UserDTO playerDefault = UserDTO("Leandro Santos", "leandro@gmail.com", "Password1@", DateFormat('dd MMMM yyyy').format(DateTime(2000)), "Male", "912345678", "Player", "default");
 
 class UserDTO {
-  final String name, email, password, birthDate, gender, mobilePhone, role;
-  UserDTO(this.name, this.email, this.password, this.birthDate, this.gender, this.mobilePhone, this.role);
+  final String name, email, password, birthDate, gender, mobilePhone, role, photo;
+  UserDTO(this.name, this.email, this.password, this.birthDate, this.gender, this.mobilePhone, this.role, this.photo);
 }
 
 TeamDTO teamDefault = TeamDTO("7b640ac5-ea97-45d0", "Best FC", "Soccer", null);

@@ -47,9 +47,11 @@ class _Register2State extends State<Register2> {
         prefs.getString('password')!,
         prefs.getString('birthdate')!,
         prefs.getString('gender')!,
-        prefs.getString('mobilePhone')!,
-        prefs.getString('role')!
+        prefs.getString('phone')!,
+        prefs.getString('role')!,
+        prefs.getString('photo')!
     );
+    Singleton().createUser(user!);
   }
 
   bool validateGender() {
@@ -144,7 +146,6 @@ class _Register2State extends State<Register2> {
                             if (validateGender()) {
                               _setUser();
                               _getUser();
-                              user != null ? Singleton().createUser(user!) : null;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 snackBarStyle("Account successfully created")
                               );

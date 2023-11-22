@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trainlink/profile.dart';
+import 'package:trainlink/singleton.dart';
 
 import 'image_widget.dart';
 import 'utils.dart';
@@ -30,6 +31,7 @@ class _EditProfileState extends State<EditProfile> {
   String? _gender;
   String? _birthdate;
   String? _phone;
+  String? _photo;
   bool isCoach = false;
 
   @override
@@ -46,6 +48,7 @@ class _EditProfileState extends State<EditProfile> {
       _gender = prefs!.getString('gender')!;
       _birthdate = prefs!.getString('birthdate')!;
       _phone = prefs!.getString('phone')!;
+      _photo = prefs!.getString('photo');
     });
   }
 
@@ -59,7 +62,6 @@ class _EditProfileState extends State<EditProfile> {
 
   bool validateFields() {
     bool toReturn = false;
-    prefs!.setString('photo', image?.path ?? "default");
     if (nameController.text.isNotEmpty && nameController.text != _user) {
       prefs!.setString('name', nameController.text);
       toReturn = true;
@@ -76,11 +78,22 @@ class _EditProfileState extends State<EditProfile> {
       prefs!.setString('phone', mobilePhoneController.text);
       toReturn = true;
     }
+    if (image != null && image?.path != _photo) {
+      prefs!.setString('photo', image!.path);
+      toReturn = true;
+    }
     return toReturn;
   }
 
   @override
   Widget build(BuildContext context) {
+    File? img;
+    if (image != null || _photo == "default" || _photo == null) {
+      img = image;
+    } else {
+      img = File(_photo!);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Profile'),
@@ -97,7 +110,7 @@ class _EditProfileState extends State<EditProfile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ImageWidget(
-                    image: image,
+                    image: img,
                     defaultImagePath: 'assets/images/profile.png',
                     size: 130,
                     onClicked: (source) => pickImage(source),

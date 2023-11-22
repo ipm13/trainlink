@@ -37,7 +37,7 @@ class ImageWidget extends StatelessWidget {
   }
 
   Widget buildImage(BuildContext context) {
-    if (this.image == null) {
+    if (this.image == null || this.image?.path == "default") {
       return ClipOval(
         child: Material(
           color: Colors.white,

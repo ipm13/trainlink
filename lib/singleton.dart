@@ -25,7 +25,11 @@ class Singleton {
   }
 
   UserDTO? getUserByEmail(String email) {
-    return users?.values.firstWhere((user) => user.email == email);
+    try {
+      return users?.values.firstWhere((user) => user.email == email);
+    } catch(e) {
+      return null;
+    }
   }
 
   // Teams

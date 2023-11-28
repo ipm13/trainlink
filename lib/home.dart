@@ -149,7 +149,7 @@ class _HomeState extends State<Home> {
       widgets.add(const SizedBox(height: 120));
       widgets.add(labelStyle("You're not part of any team"));
       widgets.add(const SizedBox(height: 8));
-      widgets.add(labelStyle("Try creating one"));
+      widgets.add(labelStyle("Try ${isCoach == true ? "creating" : "join"} one"));
     } else {
       Singleton().getTeams()?.forEach((id, team) {
         String name = team.name;
@@ -237,7 +237,7 @@ class _HomeState extends State<Home> {
                                     snackBarStyle("You already belong to this team", warning: true)
                                 );
                               } else {
-                                Singleton().addTeam(teamDefault.name, teamDefault.modality, teamDefault.logoPath);
+                                Singleton().addTeam(teamDefault.name, teamDefault.modality, _user ?? "", teamDefault.logoPath);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     snackBarStyle("Welcome to the team")
                                 );

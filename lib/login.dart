@@ -101,8 +101,7 @@ class _LoginState extends State<Login> {
                     TextFormField(
                       style: inputStyle(),
                       controller: emailController,
-                      decoration:
-                      inputFieldDecoration("Enter your email", prefixIcon: Icons.email),
+                      decoration: inputFieldDecoration("Enter your email", prefixIcon: Icons.email),
                       validator: (value) => EmailValidator.validate(value!) ? null : "Please enter a valid email",
                     ),
                     const Padding(padding: EdgeInsets.only(bottom: 20)),

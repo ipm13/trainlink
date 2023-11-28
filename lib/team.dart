@@ -63,7 +63,7 @@ class _TeamState extends State<Team> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-              child: labelStyle("Invitation Code", size: 24.0, bold: true),
+              child: labelStyle("Invitation Code", size: 20, bold: true),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 80),
@@ -99,17 +99,25 @@ class _TeamState extends State<Team> {
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
-            labelStyle("Modality", size: 24.0, bold: true),
+            labelStyle("Modality", size: 20, bold: true),
             const SizedBox(
                 height: 6,
             ),
             labelStyle(team.modality),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
-            labelStyle("Players", size: 24.0, bold: true),
+            labelStyle("Coach", size: 20, bold: true),
+            const SizedBox(
+              height: 6,
+            ),
+            labelStyle(team.coachName),
+            const SizedBox(
+              height: 10,
+            ),
+            labelStyle("Players", size: 20, bold: true),
             const CustomLine(),
             Expanded(
               child: Center(
@@ -117,7 +125,7 @@ class _TeamState extends State<Team> {
                   itemCount: 43,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      padding: const EdgeInsets.symmetric(vertical: 6.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

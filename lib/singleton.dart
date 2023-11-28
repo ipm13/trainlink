@@ -37,10 +37,10 @@ class Singleton {
   HashMap<int, TeamDTO>? teams = HashMap();
   int? teamId;
 
-  void addTeam(String name, String modality, String? logoPath) {
+  void addTeam(String name, String modality, String coachName, String? logoPath) {
     teams ??= HashMap();
     int id = teams!.length + 1;
-    teams![id] = TeamDTO("7b640ac5-ea97-45d$id", name, modality, logoPath);
+    teams![id] = TeamDTO("7b640ac5-ea97-45d$id", name, modality, coachName, logoPath);
   }
 
   HashMap<int, TeamDTO>? getTeams() {
@@ -63,7 +63,7 @@ class Singleton {
   void addSchedule(String teamName, String trainingName, String location, String weekDay, int hours, int minutes) {
     schedules ??= HashMap();
     int id = schedules!.length + 1;
-    schedules![id] = ScheduleDTO(teamName, location, weekDay, hours, minutes, getTrainingByName(trainingName));
+    schedules![id] = ScheduleDTO(id, teamName, location, weekDay, hours, minutes, getTrainingByName(trainingName), true);
   }
 
   HashMap<int, ScheduleDTO>? getSchedules() {
@@ -72,6 +72,10 @@ class Singleton {
 
   ScheduleDTO? getSchedule(int? id) {
     return schedules?[id];
+  }
+
+  void cancelSchedule(int? id) {
+    schedules?[id]?.attendance = false;
   }
 
   List<ScheduleDTO> getSchedulesByWeekDay(String weekDay) {
@@ -131,12 +135,12 @@ class UserDTO {
   UserDTO(this.name, this.email, this.password, this.birthDate, this.gender, this.mobilePhone, this.role, this.photo);
 }
 
-TeamDTO teamDefault = TeamDTO("7b640ac5-ea97-45d0", "Best FC", "Soccer", null);
+TeamDTO teamDefault = TeamDTO("7b640ac5-ea97-45d0", "Best FC", "Soccer", coachDefault.name, null);
 
 class TeamDTO {
-  final String code, name, modality;
+  final String code, name, modality, coachName;
   final String? logoPath;
-  TeamDTO(this.code, this.name, this.modality, this.logoPath);
+  TeamDTO(this.code, this.name, this.modality, this.coachName, this.logoPath);
 }
 
 class TrainingDTO {
@@ -148,11 +152,13 @@ class TrainingDTO {
 }
 
 class ScheduleDTO {
+  final int id;
   final String teamName, location, weekDay;
   final int hours, minutes;
   final TrainingDTO? training;
+  late bool? attendance;
 
-  ScheduleDTO(this.teamName, this.location, this.weekDay, this.hours, this.minutes, this.training);
+  ScheduleDTO(this.id, this.teamName, this.location, this.weekDay, this.hours, this.minutes, this.training, this.attendance);
 }
 
 class FieldDTO {

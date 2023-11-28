@@ -111,9 +111,16 @@ class _CalendarState extends State<Calendar> {
                           style: ButtonStyle(
                               backgroundColor:
                                   MaterialStateProperty.all<Color>(
-                                      const Color.fromRGBO(24, 231, 114, 1.0))),
+                                      (Singleton().getTeams()!.isNotEmpty && Singleton().getTrainings()!.isNotEmpty
+                                          ? Color.fromRGBO(24, 231, 114, 1.0)
+                                          : Colors.grey
+                                      )
+                                  )
+                          ),
                           onPressed: () {
-                            Navigator.of(context).pushNamed('/schedule');
+                            if (Singleton().getTeams()!.isNotEmpty && Singleton().getTrainings()!.isNotEmpty) {
+                              Navigator.of(context).pushNamed('/schedule');
+                            }
                           },
                           icon: const Icon(
                             Icons.add_circle_sharp,
@@ -175,11 +182,14 @@ class _DayCardState extends State<DayCard> {
   Widget build(BuildContext context) {
     List<ScheduleDTO> schedules = getDaySchedules();
     return Column(
-      children: schedules.isEmpty ? [ const SizedBox(height: 10), const Text("No trainings scheduled", style: TextStyle(color: Colors.white),) ]: schedules.map((schedule) {
+      children: schedules.isEmpty ?
+        [ const SizedBox(height: 10), const Text("No trainings scheduled", style: TextStyle(color: Colors.white),) ]
+          : schedules.map((schedule) {
         String formattedHours = schedule.hours.toString().padLeft(2, '0');
         String formattedMinutes = schedule.minutes.toString().padLeft(2, '0');
         return GestureDetector(
           onTap: () {
+            Singleton().scheduleId = schedule.id;
             showPopup(
               schedule,
               context,
@@ -189,6 +199,10 @@ class _DayCardState extends State<DayCard> {
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
+                //border: Border.all(
+                //    color: schedule.attendance == true ? Colors.white : Colors.redAccent,
+                //    width: 4
+                //),
                 borderRadius: BorderRadius.circular(10),
               ),
               width: 0.8 * MediaQuery.of(context).size.width,
@@ -196,21 +210,26 @@ class _DayCardState extends State<DayCard> {
               margin: const EdgeInsets.symmetric(vertical: 8),
               child: Column(
                 children: [
-                  Text(
-                    schedule.teamName,
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        schedule.teamName,
+                        style: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      const SizedBox(width: 100),
+                      schedule.attendance == false ? const Icon(Icons.do_not_step_rounded, color: Colors.red, size: 25) : const SizedBox(width: 25)
+                    ],
                   ),
+
                   Row(
                     children: [
                       const Icon(Icons.timer_sharp, size: 25),
-                      const SizedBox(
-                        width: 5,
-                      ),
+                      const SizedBox(width: 5),
                       Text(
                         "$formattedHours:$formattedMinutes - "
                             "${calculateFinalTime(schedule.hours, schedule.minutes, schedule.training?.name ?? "")}",
@@ -247,8 +266,7 @@ class _DayCardState extends State<DayCard> {
     );
   }
 
-  void showPopup(
-      ScheduleDTO schedule, BuildContext context) {
+  void showPopup(ScheduleDTO schedule, BuildContext context) {
     String formattedHours = schedule.hours.toString().padLeft(2, '0');
     String formattedMinutes = schedule.minutes.toString().padLeft(2, '0');
 
@@ -292,6 +310,7 @@ class _DayCardState extends State<DayCard> {
                   const SizedBox(
                     height: 20,
                   ),
+                  schedule.attendance == true ?
                   ElevatedButton(
                     onPressed: () {
                       if (widget.role.contains("Coach")) {
@@ -304,7 +323,8 @@ class _DayCardState extends State<DayCard> {
                     child: Text(widget.role.contains("Coach")
                         ? "Check Attendance"
                         : "Cancel Attendance"),
-                  ),
+                  )
+                  : Container(),
                   const SizedBox(
                     height: 20,
                   ),
@@ -350,11 +370,14 @@ class _DayCardState extends State<DayCard> {
                 onPressed: () {
                   if (justificationController.text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        snackBarStyle("Please write a justification!"));
+                        snackBarStyle("Please write a justification!", warning: true));
                   } else {
+                    Singleton().cancelSchedule(Singleton().scheduleId);
                     ScaffoldMessenger.of(context).showSnackBar(
-                        snackBarStyle("Successfully canceled the training."));
-                    Navigator.of(context).pop();
+                        snackBarStyle("Successfully canceled the attendance."));
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => const Calendar()), (route) => false,
+                    );
                   }
                 },
                 style: flatButtonStyle,

@@ -115,7 +115,7 @@ class _RegisterState extends State<Register> {
                           controller: passwordController,
                           obscureText: true,
                           decoration: inputFieldDecoration("Enter your password", prefixIcon: Icons.lock, suffixIcon: Icons.visibility_off),
-                          validator: (value) => value!.length > 1 ? null : "Please enter a stronger password",
+                          validator: (value) => value!.length > 1 ? null : "Password must be at least 2 characters",
                         ),
                         const SizedBox(height: 8),
                         Row(

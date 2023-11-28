@@ -56,7 +56,23 @@ class _FieldState extends State<Field> {
                               Text(" Erase", style: TextStyle(color: Colors.white))
                             ],
                           ),
-                          const SizedBox(height: 60),
+                          const SizedBox(height: 20),
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                if (draggableItems.isNotEmpty) {
+                                  draggableItems.removeLast();
+                                }
+                              });
+                            },
+                            child: const Column(
+                              children: [
+                                Icon(Icons.undo, color: Colors.white, size: 30),
+                                Text("Undo", style: TextStyle(color: Colors.white))
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
                           InkWell(
                             onTap: () {
                               setState(() {
@@ -65,12 +81,12 @@ class _FieldState extends State<Field> {
                             },
                             child: const Column(
                               children: [
-                                Icon(Icons.delete, color: Colors.white, size: 40),
+                                Icon(Icons.delete, color: Colors.white, size: 30),
                                 Text("Clear All", style: TextStyle(color: Colors.white))
                               ],
                             ),
                           ),
-                          const SizedBox(height: 40),
+                          const SizedBox(height: 30),
                           ElevatedButton(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(

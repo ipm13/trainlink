@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trainlink/profile.dart';
-import 'package:trainlink/singleton.dart';
 
 import 'image_widget.dart';
 import 'utils.dart';
@@ -19,10 +18,6 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  final nameController = TextEditingController();
-  final birthDateController = TextEditingController();
-  final mobilePhoneController = TextEditingController();
-  String? selectedGenderValue;
 
   File? image;
 
@@ -51,6 +46,11 @@ class _EditProfileState extends State<EditProfile> {
       _photo = prefs!.getString('photo');
     });
   }
+
+  final nameController = TextEditingController();
+  final birthDateController = TextEditingController();
+  final mobilePhoneController = TextEditingController();
+  String? selectedGenderValue;
 
   @override
   void dispose() {
@@ -117,14 +117,14 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                   buildInputWithTitle(
                     "Name",
-                    inputFieldDecoration("Enter a new name", prefixIcon: Icons.person),
+                    inputFieldDecoration(_user ?? "", prefixIcon: Icons.person),
                     nameController,
                     charLimit: 20,
                   ),
                   const SizedBox(height: 20.0),
                   buildDropdownWithTitle(
                     "Gender",
-                    Text("Pick a new gender", style: inputStyle()),
+                    Text(_gender ?? "", style: inputStyle()),
                     ["Male", "Female", "Other"],
                     selectedGenderValue,
                     (String? selectedValue) {
@@ -142,7 +142,7 @@ class _EditProfileState extends State<EditProfile> {
                   TextFormField(
                     style: inputStyle(),
                     controller: birthDateController,
-                    decoration: inputFieldDecoration("Enter a new birth date", prefixIcon: Icons.calendar_month),
+                    decoration: inputFieldDecoration(_birthdate ?? "", prefixIcon: Icons.calendar_month),
                     validator: (value) => value!.isNotEmpty ? null : "Please enter a birth date",
                     readOnly: true,
                     onTap: () async {
@@ -160,7 +160,7 @@ class _EditProfileState extends State<EditProfile> {
                   const SizedBox(height: 20.0),
                   buildInputWithTitle(
                     "Mobile Phone",
-                    inputFieldDecoration("Enter a new phone number", prefixIcon: Icons.phone),
+                    inputFieldDecoration(_phone ?? "", prefixIcon: Icons.phone),
                     mobilePhoneController,
                     charLimit: 9,
                   ),

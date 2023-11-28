@@ -113,7 +113,9 @@ InputDecoration inputFieldDecoration(String hint,
       fillColor: Colors.white,
       floatingLabelBehavior: FloatingLabelBehavior.never,
       hintText: hint,
-      hintStyle: inputStyle());
+      hintStyle: inputStyle(),
+      errorStyle: const TextStyle(fontSize: 15, color: Colors.red)
+  );
 }
 
 AlertDialog popup(context, {String route = '', required List<Widget> widgets}) {

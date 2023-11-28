@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trainlink/singleton.dart';
 
 import 'home.dart';
@@ -19,7 +20,21 @@ class CreateTeam extends StatefulWidget {
 class _TeamState extends State<CreateTeam> {
   final nameController = TextEditingController();
   String? selectedModalityValue;
+  String? coachName;
   File? image;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  void _loadUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      coachName = prefs.getString('name');
+    });
+  }
 
   @override
   void dispose() {
@@ -94,7 +109,7 @@ class _TeamState extends State<CreateTeam> {
                       style: flatButtonStyle,
                       onPressed: () async {
                         if (validateFields()) {
-                          Singleton().addTeam(nameController.text, selectedModalityValue!, image?.path);
+                          Singleton().addTeam(nameController.text, selectedModalityValue!, coachName ?? "", image?.path);
                           showDialog(
                               barrierDismissible: false,
                               context: context,

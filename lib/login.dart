@@ -115,7 +115,7 @@ class _LoginState extends State<Login> {
                       controller: passwordController,
                       obscureText: true,
                       decoration: inputFieldDecoration("Enter your password", prefixIcon: Icons.lock, suffixIcon: Icons.visibility_off),
-                      validator: (value) => value!.length > 1 ? null : "Please enter a valid password",
+                      validator: (value) => value!.length > 1 ? null : "Password must be at least 2 characters",
                     ),
                     TextButton(
                       onPressed: () {

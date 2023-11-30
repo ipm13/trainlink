@@ -86,18 +86,25 @@ class _FieldState extends State<Field> {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 30),
-                          ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.white,
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            width: 80,
+                            height: 50,
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all<Color>(
+                                      const Color.fromRGBO(24, 231, 114, 1.0)
+                                  ),
+                              ),
+                              onPressed: () {
+                                onBackButton(context);
+                              },
+                              child: const Icon(
+                                Icons.arrow_back,
+                                color: Colors.black54,
                               ),
                             ),
-                            onPressed: () async {
-                              onBackButton(context);
-                            },
-                            child: const Icon(Icons.arrow_back, color: Colors.grey, size: 30,),
-                          ),
+                          )
                         ],
                       ),
                       Padding(
@@ -129,27 +136,24 @@ class _FieldState extends State<Field> {
                             ],
                           ),
                           const SizedBox(height: 70),
-                          ElevatedButton(
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              minimumSize: const Size(50, 50),
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          SizedBox(
+                            width: 110,
+                            height: 50,
+                            child: ElevatedButton.icon(
+                              style: TextButton.styleFrom(
+                                backgroundColor: const Color.fromRGBO(24, 231, 114, 1.0),
                               ),
-                              backgroundColor: const Color.fromRGBO(86, 94, 109, 1.0),
-                            ),
-                            onPressed: () async {
-                              final image = await controller.capture();
-                              if (image == null) return;
+                              onPressed: () async {
+                                final image = await controller.capture();
+                                if (image == null) return;
 
-                              await saveImage(image).then((value) => onBackButton(context));
-                            },
-                            child: const Row(
-                              children: [
-                                Icon(Icons.save),
-                                Text(" Save"),
-                              ],
+                                await saveImage(image).then((value) => onBackButton(context));
+                              },
+                              icon: const Icon(
+                                Icons.save,
+                                color: Colors.black54,
+                              ),
+                              label: buttonLabelStyle("Save"),
                             ),
                           ),
                         ],
